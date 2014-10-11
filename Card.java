@@ -12,7 +12,7 @@ public class Card
 {
     public String suit = "";
     public int value = 0;
-    
+    public String shortText = "";
     
     /**
      * Constructor for objects of class Card
@@ -21,6 +21,14 @@ public class Card
     {
         this.value = newValue;
         this.suit = newSuit;
+        
+        String faceCardType = "";
+        if(this.value == 11) faceCardType = "J";
+        else if(this.value == 12) faceCardType = "Q";
+        else if(this.value == 13) faceCardType = "K";
+        else if(this.value == 14) faceCardType = "A";
+        else faceCardType += newValue;
+        this.shortText = faceCardType + newSuit.charAt(0);
     }
 
     public String toString()
@@ -29,12 +37,12 @@ public class Card
         if(value == 'A') retText = "Ace";
         String faceCardType = "";
         String printSuit = Character.toUpperCase(this.suit.charAt(0)) + this.suit.substring(1);
-        if(this.value == 11) faceCardType = "J";
-        else if(this.value == 12) faceCardType = "Q";
-        else if(this.value == 13) faceCardType = "K";
-        else if(this.value == 14) faceCardType = "A";
-        else faceCardType += this.value;
-        retText = this.value + " of " + printSuit + "s (" + faceCardType + this.suit.charAt(0) + ")";
+        if(this.value == 11) retText = "Jack";
+        else if(this.value == 12) retText = "Queen";
+        else if(this.value == 13) retText = "King";
+        else if(this.value == 14) retText = "Ace";
+        else  retText = "" + this.value;
+        retText += " of " + printSuit + "s (" + this.shortText + ")";
         return retText;
     }
     
