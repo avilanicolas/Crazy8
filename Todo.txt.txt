@@ -1,0 +1,3 @@
+(A) Meet in person to discuss program requirements @library
+(B) Design, implement player class +Crazy8
+(C) Design, implement primary while loop in Crazy8Driver +Crazy8
