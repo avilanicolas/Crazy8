@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Crazy8Driver
 {
