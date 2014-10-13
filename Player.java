@@ -33,6 +33,8 @@ public class Player
         //this.hand = newHand;
     }
     
+    public Player() {}
+    
     /**
      * @return This player's name.
      */

@@ -26,13 +26,13 @@ public class Crazy8Driver
          * Uncommented due to testing and fills the list with Gul'dan and Thrall.
          */
         ArrayList<Player> players = new ArrayList<Player>();
-        //players = instantiatePlayers(playerCache);
-        players.add(playerCache.get(1)); players.add(playerCache.get(8));
+        players = instantiatePlayers(playerCache);
+        //players.add(playerCache.get(1)); players.add(playerCache.get(8));
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
         LStack<Card> deck = Crazy8Driver.makeDeck();
-        ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, 2, players);
+        ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
         LStack<Card> cardStack = new LStack<Card>();
@@ -57,12 +57,86 @@ public class Crazy8Driver
      * @param The list of players (their hands included) we're working with.
      * @param cardStack The growing stack of cards.
      */
+    @SuppressWarnings("unchecked")
     private static void playerTurn(LStack<Card> deck, ArrayList<Player> playerList, LStack<Card> cardStack)
     {
-        System.out.println("\n\t\t" + cardStack.peek() + "\n");
+        // So we don't have to repeatedly call playerList.get(0) to refer to the player, let's just make a 
+        // variable that does that for us.
+        Player player = playerList.get(0);
+        
+        // The following using the format method of the String class to cleanly print out a spaced out message
+        // that displays the top of the stack.
+        System.out.println("\n\n\n\n\n\n");
+        String outText = String.format("%-20s %-13s %-20s\n\n", " ", "Top of stack: ", cardStack.peek());
+        System.out.println(outText);
+        
+        // Here we are scrolling through every card in the player's hand and printing it, using .format() to make sure
+        // everything is spaced correctly.
+        // Note on this format: The specific %-20s merely specifies a left-aligned message of 20 characters in length.
+        //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
+        //  will be filled in with whitespace.
         String handText = "";
-        for(Card card : playerList.get(0).hand) handText += card + " ";
+        for(Card card : player.hand)
+        {
+            handText += String.format("%-20s", card);
+            // Make every row 4 cards in length, for less wide displays.
+            if(player.hand.indexOf(card) == 3) handText += "\n";
+        }
+        handText += "\n\n";
         System.out.println(handText);
+        
+        // Now we're going to print out the hand size of every player.
+        // Hand size is formatted similarily to the hand above.
+        String cardCountText = "";
+        String isYou = " (You)"; // Print this first, and reset it. Will only display on the first iteration, which is the player.
+        for (Player current : playerList)
+        {
+            String handCount = "Number of Cards: " + current.hand.size();
+            cardCountText += String.format("%-15s    %-10s %-5s", current.name + isYou, handCount, " ");
+            if((playerList.indexOf(current) + 1) % 2 == 0 && current != player) cardCountText += "\n"; // Print a new line for every two players.
+            isYou = "";
+        }
+        System.out.println(cardCountText);
+        
+        // The following code handles user input. legalWords operates the exactly as it appears in .initializePlayers()
+        // We take decision and break decision up into an array in case we need to examine the input in multiple parts or as a whole.
+        // For example, the user may input "taunt Rexxar," which would mean a taunt directed at Rexxar. 
+        // For input that will play cards, we'll use regex input.
+        ArrayList legalWords = new ArrayList<String>();
+        legalWords.add("help"); legalWords.add("rules");
+        legalWords.add("greeting"); legalWords.add("taunt");
+        
+        Scanner userIn = new Scanner(System.in);
+        boolean decisionReached = false;
+        while(!decisionReached && userIn.hasNext())
+        {
+            String decision = userIn.next();
+            String[] breakup = decision.split(" ");
+            if(legalWords.contains(breakup[0]))
+            {
+                if(breakup[0].equals("help") || breakup[0].equals("rules"))
+                {
+                    Crazy8Driver.helpMenu();
+                }
+                else if(breakup[0].equals("greeting"))
+                {
+                    System.out.println(player.greetingText);
+                }
+                else if(breakup[0].equals("taunt"))
+                {
+                    System.out.println(player.greetingText);
+                }
+                decisionReached = true;
+            }
+        }
+    }
+    
+    /**
+     * Does nothing yet.
+     */
+    private static void helpMenu()
+    {
+        System.out.println("\n\n");
     }
     
     /**
