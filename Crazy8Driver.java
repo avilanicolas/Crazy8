@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Crazy8Driver
 {
@@ -26,8 +28,8 @@ public class Crazy8Driver
          * Uncommented due to testing and fills the list with Gul'dan and Thrall.
          */
         ArrayList<Player> players = new ArrayList<Player>();
-        players = instantiatePlayers(playerCache);
-        //players.add(playerCache.get(1)); players.add(playerCache.get(8));
+        //players = instantiatePlayers(playerCache);
+        players.add(playerCache.get(1)); players.add(playerCache.get(8));
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
@@ -57,7 +59,6 @@ public class Crazy8Driver
      * @param The list of players (their hands included) we're working with.
      * @param cardStack The growing stack of cards.
      */
-    @SuppressWarnings("unchecked")
     private static void playerTurn(LStack<Card> deck, ArrayList<Player> playerList, LStack<Card> cardStack)
     {
         // So we don't have to repeatedly call playerList.get(0) to refer to the player, let's just make a 
@@ -102,41 +103,188 @@ public class Crazy8Driver
         // We take decision and break decision up into an array in case we need to examine the input in multiple parts or as a whole.
         // For example, the user may input "taunt Rexxar," which would mean a taunt directed at Rexxar. 
         // For input that will play cards, we'll use regex input.
-        ArrayList legalWords = new ArrayList<String>();
+        ArrayList<String> legalWords = new ArrayList<String>();
         legalWords.add("help"); legalWords.add("rules");
         legalWords.add("greeting"); legalWords.add("taunt");
+        legalWords.add("forfeit"); legalWords.add("draw");
+        legalWords.add("pass"); legalWords.add("discard");
+        
+        // When we need to decide the audience of the player's emotes, it's useful to store the each players' name in a list
+        // so we can easily verify that an enterd name is a valid player.
+        ArrayList<String> playerNames = new ArrayList<String>();
+        for(Player character : playerList) playerNames.add(character.name);
         
         Scanner userIn = new Scanner(System.in);
         boolean decisionReached = false;
-        while(!decisionReached && userIn.hasNext())
+        String decision = "";
+        String errorText = "Invalid input.\n"; // Print this out everytime the user enters bad input.
+        // General note when using scanners that take input from System.in:
+        //  If you use scanner.hasNext() when that scaner is taking input from System.in, unless it reads en EOF (Ctrl+D),
+        //  .hasNext() will ALWAYS return true, because the input stream from System hasn't ended.
+        while(!decisionReached)
         {
-            String decision = userIn.next();
-            String[] breakup = decision.split(" ");
-            if(legalWords.contains(breakup[0]))
+            // responseType is used to determine if the user is sending an emote, and if they are, to make sure
+            // that the AI responds appropriately.
+            String responseType = "none";
+            decision = userIn.next();
+            if(legalWords.contains(decision))
             {
-                if(breakup[0].equals("help") || breakup[0].equals("rules"))
+                if(decision.equals("help") || decision.equals("rules"))
                 {
+                    // Call the helpMenu method.
                     Crazy8Driver.helpMenu();
                 }
-                else if(breakup[0].equals("greeting"))
+                else if(decision.equals("greeting"))
                 {
-                    System.out.println(player.greetingText);
+                    responseType = "greeting";
                 }
-                else if(breakup[0].equals("taunt"))
+                else if(decision.equals("taunt"))
                 {
-                    System.out.println(player.greetingText);
+                    responseType = "taunt";
                 }
-                decisionReached = true;
+                else if(decision.equals("forfeit"))
+                {
+                    decisionReached = true;
+                }
+                else if(decision.equals("draw"))
+                {
+                    // Implement the draw mechanic.
+                }
+                else if(decision.equals("pass"))
+                {
+                    // Flesh out this mechanic.
+                    decisionReached = true;
+                }
+                else if(decision.equals("discard"))
+                {
+                    // Implement the discard mechanic.
+                }
             }
+            else
+            {
+                System.out.println(errorText);   
+            }
+            
+            // Every iteration, we check to see if there is a response that should occur from the AI DURING the players' turn
+            // This response, of course, only takes the form of dialogue. 
+            if(!responseType.equals("none"))
+            {
+                // Make sure to determine an audience.
+                System.out.println("To who?");
+                decision = userIn.next();
+                
+                // If it is a legal input.
+                if(playerNames.contains(decision))
+                {
+                    Player responder = null;
+                    String audience = decision;
+                    
+                    // This loop iterates over the player list and finds the player that the user is sending an emote to. 
+                    // responder is set equal to that player so we can easily refer to the player that we are working with.
+                    // Note: We've already establish that the targeted audience IS in the game, so we won't have to worry
+                    //       about not finding a matching input. The following if statements check to see if it's not null
+                    //       because a compiler error will be thrown otherwise.
+                    for(Player playerAI : playerList)
+                    {
+                        if(playerAI.name.equals(audience) && !audience.equals(player.name))
+                            responder = playerAI;
+                    }
+                    
+                    // Now we finally reply with an appropriate message.
+                    if(responseType.equals("greeting") && responder != null)
+                    {
+                        Crazy8Driver.pacedDialogue(player.greetingText, player);
+                        Crazy8Driver.pacedDialogue(responder.greetingText, responder);
+                    }
+                    else if(responseType.equals("taunt") && responder != null)
+                    {
+                        Crazy8Driver.pacedDialogue(player.tauntText, player);
+                        Crazy8Driver.pacedDialogue(responder.tauntText, responder);
+                    }
+                }
+                else
+                {
+                    System.out.println(errorText);
+                }
+            }
+            responseType = "none";
         }
     }
     
     /**
-     * Does nothing yet.
+     * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process
+     * the dialogue, instead of it all happening at once. Usually, .pacedDialogue() will be followed another call to this method, resembling some
+     * artificial pause in speech.
+     * @param dialogue The string to print out.
+     * @param character The speaker for this line of dialogue.
+     */
+    private static void pacedDialogue(String dialogue, Player character)
+    {
+        System.out.print(character + ": " + dialogue + "\n\n");
+        try 
+        {
+            Thread.sleep(1000);
+        } 
+        catch (Exception e)
+        {
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    /**
+     * Print out and handle user input for a series of interactive menus that offer rules, context, and assistance to players.
      */
     private static void helpMenu()
     {
-        System.out.println("\n\n");
+        String menuText = String.format("\n\n This is the card game, Crazy 8's. \n Here is a table of possible inputs:\n");
+        menuText += String.format("%-10s %-20s\n", "rules", "For the rules of Crazy 8.");
+        menuText += String.format("%-10s %-20s\n", "emotes", "How to use emotes in this game.");
+        menuText += String.format("%-10s %-20s\n", "[misc]", "View a list of all legal commands.");
+        menuText += String.format("%-10s %-20s\n", "exit", "To exit this menu.");
+        menuText += String.format("%-10s %-20s\n", "menu", "Print this menu again.");
+        System.out.println(menuText);
+        ArrayList<String> legalWords = new ArrayList<String>();
+        legalWords.add("rules"); legalWords.add("emotes"); legalWords.add("exit");
+        Scanner userin = new Scanner(System.in);
+        String decision = "";
+        while(!decision.equals("exit"))
+        {
+            System.out.println("\n\n\n");
+            decision = userin.next();
+            if(decision.equals("rules"))
+            {
+                System.out.println("\n\nThe premise of Crazy 8s is to empty your hand before your opponents, the first to do so wins. \n"
+                                 + "* You may only discard a card when it matches either the rank or suit of the card at the top of the pile. \n"
+                                 + "\t To do this, enter: 'discard' followed by the card you would like to discard in its shorthand form.\n"
+                                 + "\t For example, a 6 of Heart's shorthand would be a 6h. An Ace of diamonds would be Ad.\n"
+                                 + "* You may discard several cards of the same rank, all at once. To do this, follow the input:\n"
+                                 + "\t discard 4c 4d 4h"
+                                 + "\t The shorthands must be seperated by spaces. The last card in the list will be the card at the top of the discard pile.\n"
+                                 + "* You may play an 8 at any time. When an 8 is played, you can change the suit that the other plays must match.\n"
+                                 + "\t If the first card to be discarded from the deck is an 8, any suit may be played.\n"
+                                 + "* If you have no possible cards to discard, you must draw from the pile. To do this, enter 'draw.'\n"
+                                 + "\t You can draw as many times from the deck as you would like.\n"
+                                 + "\t Once you may have drawn at least 3 cards, you may pass your turn.\n"
+                                 + "\t If the deck has been exhausted, and you have no available cards to play, you may also pass your turn.\n");
+            }
+            else if(decision.equals("emotes"))
+            {
+                System.out.println("\nYou may greet or taunt your opponent. To do this, enter either 'greeting' or 'taunt.\n"
+                                 + "You will be prompted who to greet or taunt, simply enter the name of your audience.");
+            }
+            else if(decision.equals("[misc]"))
+            {
+                System.out.println(String.format("\n%-10s %-30s", "discard", "Discard a number of cards onto the discard pile."));
+                System.out.println(String.format("%-10s %-30s", "draw", "Draw a card from the deck."));
+                System.out.println(String.format("%-10s %-30s", "pass", "Pass your turn to the next player."));
+                System.out.println(String.format("%-10s %-30s", "greeting", "Say a greeting to the AI."));
+                System.out.println(String.format("%-10s %-30s", "taunt", "Taunt the AI."));
+                System.out.println(String.format("%-10s %-30s", "players", "List the players in the current game."));
+                System.out.println(String.format("%-10s %-30s", "forfeit", "Forfeit the game."));
+            }
+            else if(decision.equals("menu")) System.out.println(menuText);
+        }
+            
     }
     
     /**
