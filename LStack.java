@@ -58,6 +58,7 @@ public class LStack<T>
     
     /**
      * The stack push method.
+     * @param value The value to push.
      */
     public void push(T value)
     {
@@ -67,6 +68,7 @@ public class LStack<T>
     
     /**
      * The stack pop method.
+     * @return The popped item.
      */
     public T pop()
     {
@@ -76,6 +78,7 @@ public class LStack<T>
     
     /**
      * The stack peek method.
+     * @return The top of the stack.
      */
     public T peek()
     {
@@ -85,6 +88,8 @@ public class LStack<T>
     /**
      * Get the value of an item at a certain index with the stack.
      * NOTE: Stack indices begin from 1, not zero.
+     * @param index The index in the stack you want to get.
+     * @return The item at the specified index.
      */
     public T get(int index)
     {

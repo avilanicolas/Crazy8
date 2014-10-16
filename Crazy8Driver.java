@@ -11,23 +11,14 @@ public class Crazy8Driver
         /* Here we'll instantiate a cache of of players for the program to choose from later on. There is a better way to declare a bunch of Players
          * in bulk, but right now we'll just do it right here before it gets too large.
          */
-        ArrayList<Player> playerCache = new ArrayList<Player>();
-        playerCache.add(new Player("Anduin", "By the light!", "Greetings.", "The Light shall burn you!"));
-        playerCache.add(new Player("Gul'dan", "Suffer!", "I greet you.", "Your soul shall suffer!"));
-        playerCache.add(new Player("Valeera", "Watch. Your. Back.", "The pleasure is mine.", "I will be your death!"));
-        playerCache.add(new Player("Uther", "I will fight with honor!", "Well met!", "Justice demands retribution!"));
-        playerCache.add(new Player("Jaina", "You asked for it!", "Hello.", "My magic will tear you apart!"));
-        playerCache.add(new Player("Malfurion", "I must protect the wilds!", "My greetings.", "Nature will rise against you!"));
-        playerCache.add(new Player("Rexxar", "Let the hunt begin!", "Greetings, traveller.", "I wll hunt you down!"));
-        playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
-        playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
+        ArrayList<Player> playerCache = Crazy8Driver.populatePlayerCache();
         
         /* Establish the player list that will be playing the game. This list draws from playerCache, and calls instantiatePlayers() to fill the list.
          * Uncommented due to testing and fills the list with Gul'dan and Thrall.
          */
         ArrayList<Player> players = new ArrayList<Player>();
-        //players = instantiatePlayers(playerCache);
-        players.add(playerCache.get(1)); players.add(playerCache.get(8));
+        players = instantiatePlayers(playerCache);
+        //players.add(playerCache.get(1)); players.add(playerCache.get(8)); // --- This line is for debugging
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
@@ -66,7 +57,8 @@ public class Crazy8Driver
         // The following using the format method of the String class to cleanly print out a spaced out message
         // that displays the top of the stack.
         System.out.println("\n\n\n\n\n\n");
-        String outText = String.format("%-20s %-13s %-20s\n\n", " ", "Top of stack: ", cardStack.peek());
+        String currentSuit = Character.toUpperCase(cardStack.peek().suit.charAt(0)) + cardStack.peek().suit.substring(1);
+        String outText = String.format("%-20s %-13s %-20s %-20s\n\n", " ", "Top of stack: ", cardStack.peek(), "Current suit: " + currentSuit + "s");
         System.out.println(outText);
         
         // Here we are scrolling through every card in the player's hand and printing it, using .format() to make sure
@@ -77,7 +69,7 @@ public class Crazy8Driver
         String handText = "";
         for(Card card : player.hand)
         {
-            handText += String.format("%-20s", card);
+            handText += String.format("%-25s", card);
             // Make every row 4 cards in length, for less wide displays.
             if(player.hand.indexOf(card) == 3) handText += "\n";
         }
@@ -418,7 +410,7 @@ public class Crazy8Driver
                 i++;
             }
         }
-        System.out.println(versusText);
+        Crazy8Driver.pacedDialogue(versusText, new Player());
         
         return players;
     }
@@ -533,5 +525,21 @@ public class Crazy8Driver
                 suitsUsed = true;
         }
         return deck;
+    }
+    
+    private static ArrayList<Player> populatePlayerCache()
+    {
+        ArrayList<Player> playerCache = new ArrayList<Player>();
+        playerCache.add(new Player("Anduin", "By the light!", "Greetings.", "The Light shall burn you!"));
+        playerCache.add(new Player("Gul'dan", "Suffer!", "I greet you.", "Your soul shall suffer!"));
+        playerCache.add(new Player("Valeera", "Watch. Your. Back.", "The pleasure is mine.", "I will be your death!"));
+        playerCache.add(new Player("Uther", "I will fight with honor!", "Well met!", "Justice demands retribution!"));
+        playerCache.add(new Player("Jaina", "You asked for it!", "Hello.", "My magic will tear you apart!"));
+        playerCache.add(new Player("Malfurion", "I must protect the wilds!", "My greetings.", "Nature will rise against you!"));
+        playerCache.add(new Player("Rexxar", "Let the hunt begin!", "Greetings, traveller.", "I wll hunt you down!"));
+        playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
+        playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
+        
+        return playerCache;
     }
 }
