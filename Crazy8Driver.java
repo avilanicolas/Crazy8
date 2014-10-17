@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
+import java.util.regex.Pattern;
 
 public class Crazy8Driver
 {
@@ -17,8 +18,8 @@ public class Crazy8Driver
          * Uncommented due to testing and fills the list with Gul'dan and Thrall.
          */
         ArrayList<Player> players = new ArrayList<Player>();
-        players = instantiatePlayers(playerCache);
-        //players.add(playerCache.get(1)); players.add(playerCache.get(8)); // --- This line is for debugging
+        //players = instantiatePlayers(playerCache);
+        players.add(playerCache.get(1)); players.add(playerCache.get(8)); // --- This line is for debugging
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
@@ -39,6 +40,7 @@ public class Crazy8Driver
         {
             Crazy8Driver.playerTurn(deck, players, cardStack);
             exitGame = true;
+            Crazy8Driver.playerTurn(deck, players, cardStack);
         }
     }
     
@@ -147,7 +149,15 @@ public class Crazy8Driver
                 }
                 else if(decision.equals("discard"))
                 {
-                    // Implement the discard mechanic.
+                    if(!Crazy8Driver.discard(userIn, player, cardStack))
+                    {
+                        System.out.println("No cards were discarded.");
+                    }
+                    else
+                    {
+                        System.out.println("Ending turn.");
+                        decisionReached = true;
+                    }
                 }
             }
             else
@@ -199,6 +209,78 @@ public class Crazy8Driver
             }
             responseType = "none";
         }
+    }
+    
+    /**
+     * @param userin The scanner to read from.
+     * @param player Our player.
+     * @param discardPile The growing discard pile.
+     * @return If a card was discarded or not.
+     */
+    private static boolean discard(Scanner userin, Player player, LStack<Card> discardPile)
+    {
+        boolean discarded = false;
+        
+        // This patter matches any text that suits the shourthand we use for cards.
+        Pattern pattern = Pattern.compile("(10)[a-zA-Z]|[1-9ajkqAJKQ][a-zA-Z]");
+        System.out.println("\n\n Enter the shorthand for each card you would like to discard.");
+        int i = 0;
+        int cardsRemoved = 0;
+        int cardIndex = -1;
+        while(userin.hasNext(pattern) && cardsRemoved < 3)
+        {
+            /* While the next input follows our shorthand pattern, and we haven't discarded more than 3 cards, process
+             * the user input to determine if we can discard the card.
+             * 
+             */
+            
+            String discardText = "";
+            if(cardsRemoved < 3) discardText = userin.next();
+            boolean nextInHand = false;
+            for(Card card : player.hand)
+            {
+                if(discardText.equals(card.shortText))
+                {
+                    System.out.println("Discarding a " + card);
+                    nextInHand = true;
+                    discarded = true;
+                    
+                    if(player.hand.indexOf(card) > -1)
+                    {
+                        discardPile.push(card);
+                        cardIndex = player.hand.indexOf(card);
+                    }
+                    else
+                    {
+                        cardIndex = -1;   
+                    }
+                        
+                    
+                    cardsRemoved++;
+                }
+            }
+            
+            if(cardIndex > -1) player.hand.remove(cardIndex);
+            
+            String handText = "";
+            for(Card card : player.hand)
+            {
+                handText += String.format("%-25s", card);
+                // Make every row 4 cards in length, for less wide displays.
+                if(player.hand.indexOf(card) == 3) handText += "\n";
+            }
+            handText += "\n\n";
+            System.out.println(handText);            
+            
+            if(!nextInHand)
+            {
+                System.out.println("\n'" + discardText + "' not a valid card in your hand.");
+                System.out.println("Will end after 3 cards have been discarded. \n\n\n");
+            }
+        }
+        userin.next();
+        System.out.println("\nDiscard phase complete.");
+        return discarded;
     }
     
     /**
