@@ -42,4 +42,8 @@ public class Player
     {
         return this.name;
     }
+    public Card opponentTurn()
+    {
+       
+    }
 }

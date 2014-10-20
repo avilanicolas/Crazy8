@@ -33,7 +33,7 @@ public class Crazy8Driver
         System.out.println("You go first.");
         Card firstCard = deck.pop();
         System.out.println("The first card drawn is a(n) " + firstCard);
-        cardStack.push(firstCard);        
+        cardStack.push(firstCard);
         
         boolean exitGame = false;
         while(!exitGame)
