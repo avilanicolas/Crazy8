@@ -1,4 +1,4 @@
-package Crazy8;
+//package Crazy8;
 import java.lang.Comparable;
 
 /**
@@ -103,5 +103,13 @@ public class Card
             if(ranks[1] > ranks[0]) ret = -1;
         }
         return ret;
+    }
+    
+    public boolean validPlay(Card other)
+    {
+        if(this.value == other.value || this.suit == other.suit)
+            return true;
+        else
+            return false;
     }
 }

@@ -1,12 +1,17 @@
-package Crazy8;
+//package Crazy8;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
+import java.util.InputMismatchException;
 import java.util.regex.Pattern;
+//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
+//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
+//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
 
 public class Crazy8Driver
 {
+    public static final int MAXRM = 3;
     public static void main(String[] args)
     {
         /* Here we'll instantiate a cache of of players for the program to choose from later on. There is a better way to declare a bunch of Players
@@ -69,11 +74,17 @@ public class Crazy8Driver
         //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
         //  will be filled in with whitespace.
         String handText = "";
-        for(Card card : player.hand)
-        {
-            handText += String.format("%-25s", card);
+        //---------------------------------------------------------------
+        //for(Card card : player.hand)
+        //{
+        //    handText += String.format("%-25s", card);
             // Make every row 4 cards in length, for less wide displays.
-            if(player.hand.indexOf(card) == 3) handText += "\n";
+        //    if(player.hand.indexOf(card) == 3) handText += "\n";
+        //}
+        //---------------------------------------------------------------
+        for(int ooga = 0; ooga < player.hand.size(); ooga++)
+        {
+             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
         }
         handText += "\n\n";
         System.out.println(handText);
@@ -147,7 +158,7 @@ public class Crazy8Driver
                     // Flesh out this mechanic.
                     decisionReached = true;
                 }
-                else if(decision.equals("discard"))
+                else if(decision.equals("discard"))            //Caution: Under Construction
                 {
                     if(!Crazy8Driver.discard(userIn, player, cardStack))
                     {
@@ -216,72 +227,93 @@ public class Crazy8Driver
      * @param player Our player.
      * @param discardPile The growing discard pile.
      * @return If a card was discarded or not.
+     *
+     
+     *  SPENCER IS WORKING ON THIS NOW!!!  *------------------------------------------------------------------------------------------------
      */
     private static boolean discard(Scanner userin, Player player, LStack<Card> discardPile)
     {
         boolean discarded = false;
+        boolean[] valid = {false,false,false};
+        Integer[] rmNum = new Integer[MAXRM];
+        int cardsRemoved = 0, j = 0, i = 0;
+        int chosenCard = -1;
+        Card disCard = new Card(0,"A");
+        Pattern pattern = Pattern.compile("(10)[a-zA-Z]|[1-9ajkqAJKQ][a-zA-Z]");    //This pattern matches any text that suits the shourthand we use for cards.
         
-        // This patter matches any text that suits the shourthand we use for cards.
-        Pattern pattern = Pattern.compile("(10)[a-zA-Z]|[1-9ajkqAJKQ][a-zA-Z]");
-        System.out.println("\n\n Enter the shorthand for each card you would like to discard.");
-        int i = 0;
-        int cardsRemoved = 0;
-        int cardIndex = -1;
-        while(userin.hasNext(pattern) && cardsRemoved < 3)
+        System.out.println("\n\nEnter the number for each card you would like to discard. Note: You MUST get the indexes right on the first try. ");
+        while(userin.hasNext() && i < MAXRM)   //This input portion does not work yet.
+        {
+            if(userin.hasNextInt() && cardsRemoved < MAXRM)
+            {
+               rmNum[i] = userin.nextInt()-1;
+               i++;
+            }
+            else
+            {
+               System.out.println("Please type a number 1 - "+player.hand.size());
+               continue;
+            }
+        }
+        for(i = 0; i < rmNum.length; i++)
         {
             /* While the next input follows our shorthand pattern, and we haven't discarded more than 3 cards, process
              * the user input to determine if we can discard the card.
-             * 
              */
-            
-            String discardText = "";
-            if(cardsRemoved < 3) discardText = userin.next();
-            boolean nextInHand = false;
-            for(Card card : player.hand)
+            //boolean nextInHand = false;
+            disCard = player.hand.get(rmNum[i]);
+            if(rmNum[i] >= player.hand.size() || rmNum[i] < 0)
             {
-                if(discardText.equals(card.shortText))
-                {
-                    System.out.println("Discarding a " + card);
-                    nextInHand = true;
-                    discarded = true;
-                    
-                    if(player.hand.indexOf(card) > -1)
-                    {
-                        discardPile.push(card);
-                        cardIndex = player.hand.indexOf(card);
-                    }
-                    else
-                    {
-                        cardIndex = -1;   
-                    }
-                        
-                    
-                    cardsRemoved++;
-                }
+                System.out.println("\n'" + disCard + "' not a valid card in your hand.");
+                System.out.println("Will end after 3 cards max have been discarded. \n\n\n");
+                valid[i] = false;
             }
-            
-            if(cardIndex > -1) player.hand.remove(cardIndex);
-            
-            String handText = "";
-            for(Card card : player.hand)
+            else
             {
-                handText += String.format("%-25s", card);
-                // Make every row 4 cards in length, for less wide displays.
-                if(player.hand.indexOf(card) == 3) handText += "\n";
+               if(discardPile.peek().validPlay(disCard))
+               {
+                   System.out.println("Discarding a "+player.hand.get(rmNum[i]).toString());
+                   valid[i] = true;
+               }
+               else
+               {
+                   System.out.println("Cannot play that card from your hand. Moving to the next card.");
+                   valid[i] = false;
+               }
             }
-            handText += "\n\n";
-            System.out.println(handText);            
+            //player.hand.remove(chosenCard);
+            //cardsRemoved++;
+            //if(chosenCard > -1) disCard = player.hand.remove(chosenCard);
             
-            if(!nextInHand)
-            {
-                System.out.println("\n'" + discardText + "' not a valid card in your hand.");
-                System.out.println("Will end after 3 cards have been discarded. \n\n\n");
-            }
+            //String handText = "";
+            //for(Card card : player.hand)
+            //{
+            //    System.out.println(j+". "+card.toString());
+            //    j++;
+            //}
+            //handText += "\n";
+            //System.out.println(handText);
+            
+            //if(!nextInHand)
+            //{
+            //    System.out.println("\n'" + disCard + "' not a valid card in your hand.");
+            //    System.out.println("Will end after 3 cards max have been discarded. \n\n\n");
+            //}
         }
+        for(i = 0; i < rmNum.length; i++)
+        {
+        
+        }
+        for(Card card : player.hand)
+        {
+             j++;
+             System.out.println(j+". "+card.toString());
+        }
+        System.out.println("\n");
         userin.next();
         System.out.println("\nDiscard phase complete.");
-        return discarded;
-    }
+        return true;    //<---------------------------------------------/*CHANGE THIS LINE!!!!*/
+    } //---------------------------------------------------------------------------------------------------------------------------------------
     
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process

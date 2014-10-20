@@ -1,4 +1,4 @@
-package Crazy8;
+//package Crazy8;
 
 import java.util.ArrayList;
 
@@ -38,6 +38,18 @@ public class Player
     /**
      * @return This player's name.
      */
+     
+    //public Card hand(int index)
+    //{
+    //    if(hand != null && hand.size() > 0)
+    //        return hand.get(index);
+    //    else
+    //    {
+    //       System.out.println("Your hand is empty. You should have won already!");
+    //       return new Card(0,"");
+    //    }
+    //}
+    
     public String toString()
     {
         return this.name;
