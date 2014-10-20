@@ -17,6 +17,8 @@ public class Player
     public String tauntText = "";
     /** Their hand of cards. */
     public ArrayList<Card> hand;
+    /** Triggers a forfeit */
+    public boolean isPlaying;
     
     /**
      * @param newName Their new name.
@@ -30,6 +32,7 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
+        this.isPlaying = true;
         //this.hand = newHand;
     }
     
@@ -42,8 +45,15 @@ public class Player
     {
         return this.name;
     }
+    /**
+     * @return the Card that opponent played.
+     */
     public Card opponentTurn()
     {
        
+    }
+    public void forfeit()
+    {
+      isPlaying = false;
     }
 }
