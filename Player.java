@@ -1,4 +1,4 @@
-//package Crazy8;
+package Crazy8;
 
 import java.util.ArrayList;
 
