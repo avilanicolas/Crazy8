@@ -13,7 +13,8 @@ public class Crazy8Driver
          * in bulk, but right now we'll just do it right here before it gets too large.
          */
         ArrayList<Player> playerCache = Crazy8Driver.populatePlayerCache();
-        
+        //TEST DECK
+        Deck deck = new Deck();
         /* Establish the player list that will be playing the game. This list draws from playerCache, and calls instantiatePlayers() to fill the list.
          * Uncommented due to testing and fills the list with Gul'dan and Thrall.
          */
@@ -23,7 +24,7 @@ public class Crazy8Driver
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
-        LStack<Card> deck = Crazy8Driver.makeDeck();
+        //LStack<Card> deck = Crazy8Driver.makeDeck();
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
@@ -281,6 +282,14 @@ public class Crazy8Driver
         userin.next();
         System.out.println("\nDiscard phase complete.");
         return discarded;
+    }
+	
+	private static Card drawCard(Player player, LStack<Card> deck)
+    {
+		Card newCard = deck.pop();
+		player.hand.add(newCard);
+		System.out.println(player.name +" drew a "+ newCard +"!");
+		return newCard;
     }
     
     /**
