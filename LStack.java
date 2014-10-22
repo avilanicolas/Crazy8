@@ -13,7 +13,7 @@ import java.lang.Comparable;
 public class LStack<T>
 {
     LinkedList<T> stack = new LinkedList<T>();
-    int size = 0; 
+    private int size = 0; 
     
     public void LStack()
     {
@@ -33,6 +33,15 @@ public class LStack<T>
             ret = true;
         }
         return ret;
+    }
+    
+    /**
+     *  This is used to show how many cards are left in the deck o' cards.
+     *  @return size of stack
+     */
+    public int size()
+    {
+       return size;
     }
     
     /**
