@@ -1,5 +1,6 @@
-package Crazy8;
+//package Crazy8;
 import java.lang.Comparable;
+import java.util.ArrayList;
 
 /**
  * The Card class holds information on a card's name, it's suit, value. It also includes methods to print
@@ -86,22 +87,36 @@ public class Card
         // If one card is of a greater suit, return appropriately.
         // If not, work it out based on their values. Two cards are only equal if their suit matches as well as their values.
         if(ranks[0] > ranks[1])
-        {
-            ret = 1;
-        }
+            return 1;
         else if(ranks[1] > ranks[0])
-        {
-            ret = -1;
-        }
+            return -1;
         else
         {
             // We now know this to be the same suit.
             // We are now just comparing the integer value of the card, so why not reuse ranks?
             ranks[0] = this.value;
             ranks[1] = other.value;
-            if(ranks[0] > ranks[1]) ret = 1;
-            if(ranks[1] > ranks[0]) ret = -1;
+            if(ranks[0] > ranks[1]) return 1;
+            if(ranks[1] > ranks[0]) return -1;
         }
-        return ret;
+        return 0;
+    }
+    
+    //Checks if the card is a valid play.
+    public boolean validPlay(Card other)
+    {
+        if(this.value == other.value || this.suit == other.suit)
+            return true;
+        else
+            return false;
+    }
+    
+    //Extra method to check that we can have multiple cards played
+    //   in one turn.
+    //   All of the ranks being played must be the same as the discard Pile's top card.
+    public boolean sameRank(ArrayList<Card> hand, int amount)
+    {
+        if(amount == 0) return (this.value == hand.get(0).value);
+        return (this.value == hand.get(amount).value) && sameRank(hand, amount-1);
     }
 }
