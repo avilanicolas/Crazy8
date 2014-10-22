@@ -283,6 +283,14 @@ public class Crazy8Driver
         return discarded;
     }
     
+    private static Card drawCard(Player player, LStack<Card> deck)
+    {
+	    Card newCard = deck.pop();
+	    player.hand.add(newCard);
+	    System.out.println(player.name +" drew a "+ newCard +"!");
+	    return newCard;
+    }
+    
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process
      * the dialogue, instead of it all happening at once. Usually, .pacedDialogue() will be followed another call to this method, resembling some
