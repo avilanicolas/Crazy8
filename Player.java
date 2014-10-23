@@ -18,6 +18,9 @@ public class Player
     /** Their hand of cards. */
     public ArrayList<Card> hand;
     
+    /** Manually set the AI behavior when you create this object. */
+    public Behavior behavior;
+    
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -30,25 +33,9 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
-        //this.hand = newHand;
     }
     
     public Player() {}
-    
-    /**
-     * @return This player's name.
-     */
-     
-    //public Card hand(int index)
-    //{
-    //    if(hand != null && hand.size() > 0)
-    //        return hand.get(index);
-    //    else
-    //    {
-    //       System.out.println("Your hand is empty. You should have won already!");
-    //       return new Card(0,"");
-    //    }
-    //}
     
     public String toString()
     {

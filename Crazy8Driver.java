@@ -25,6 +25,7 @@ public class Crazy8Driver
         ArrayList<Player> players = new ArrayList<Player>();
         //players = instantiatePlayers(playerCache);
         players.add(playerCache.get(1)); players.add(playerCache.get(8)); // --- This line is for debugging
+        players.get(1).behavior = new AggressiveBehavior(players.get(1));
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
@@ -43,9 +44,18 @@ public class Crazy8Driver
         boolean exitGame = false;
         while(!exitGame)
         {
-            Crazy8Driver.playerTurn(deck, players, cardStack);
+            for(Card card : players.get(1).hand) System.out.println(card);
+            System.out.println("\n\n");
+            // Play a bunch of AI turns to test its functionality.
+            players.get(1).behavior.play(deck, players, cardStack);
+            players.get(1).behavior.play(deck, players, cardStack);
+            players.get(1).behavior.play(deck, players, cardStack);
+            players.get(1).behavior.play(deck, players, cardStack);
+            players.get(1).behavior.play(deck, players, cardStack);
+            players.get(1).behavior.play(deck, players, cardStack);            
+            //Crazy8Driver.playerTurn(deck, players, cardStack);
             exitGame = true;
-            Crazy8Driver.playerTurn(deck, players, cardStack);
+            //Crazy8Driver.playerTurn(deck, players, cardStack);
         }
     }
     
