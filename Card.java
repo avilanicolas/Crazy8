@@ -1,4 +1,4 @@
-package Crazy8;
+ 
 import java.lang.Comparable;
 
 /**

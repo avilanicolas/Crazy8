@@ -1,4 +1,4 @@
-package Crazy8;
+ 
 
 import java.util.ArrayList;
 
@@ -17,7 +17,10 @@ public class Player
     public String tauntText = "";
     /** Their hand of cards. */
     public ArrayList<Card> hand;
-    public boolean isplaying;
+    
+    /** Manually set the AI behavior when you create this object. */
+    public Behavior behavior;
+    
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -30,15 +33,10 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
-        this.isplaying = true;
-        //this.hand = newHand;
     }
     
     public Player() {}
     
-    /**
-     * @return This player's name.
-     */
     public String toString()
     {
         return this.name;

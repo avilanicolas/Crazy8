@@ -1,4 +1,4 @@
-package Crazy8;
+ 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -38,9 +38,9 @@ public class Crazy8Driver
         boolean exitGame = false;
         while(!exitGame)
         {
-            Crazy8Driver.playerTurn(deck, players, cardStack);
+            players.get(1).behavior.play(deck, players, cardStack);
+            //Crazy8Driver.playerTurn(deck, players, cardStack);
             exitGame = true;
-            Crazy8Driver.playerTurn(deck, players, cardStack);
         }
     }
     
@@ -630,6 +630,7 @@ public class Crazy8Driver
         playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
         playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
         
+        playerCache.get(8).behavior = new AggressiveBehavior(playerCache.get(8));
         return playerCache;
     }
 }
