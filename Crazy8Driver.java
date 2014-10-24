@@ -29,7 +29,7 @@ public class Crazy8Driver
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
-        LStack<Card> deck = Crazy8Driver.makeDeck();
+        Deck deck = new Deck();
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
@@ -75,7 +75,7 @@ public class Crazy8Driver
         //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
         //  will be filled in with whitespace.
         String handText = "";
-        System.out.println("Cards left in deck: "+ deck.size()+"\n");
+        System.out.println("Cards left in deck: "+ deck.size+"\n");
         for(int ooga = 0; ooga < player.hand.size(); ooga++)
         {
              System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());

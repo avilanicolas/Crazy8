@@ -13,7 +13,7 @@ import java.lang.Comparable;
 public class LStack<T>
 {
     LinkedList<T> stack = new LinkedList<T>();
-    private int size = 0; 
+    int size = 0; 
     
     public void LStack()
     {
