@@ -36,20 +36,21 @@ public class Player
     public Player() {}
     
     /**
+      *  Print the player's hand in a list from 1-8.
+      *
+      */
+    public void printHand()
+    {
+       for(int i = 0; i < hand.size(); i++)
+       {
+           System.out.println((i+1)+". "+hand.get(i).toString());
+       }
+       System.out.printf("\n");
+    }
+    
+    /**
      * @return This player's name.
      */
-     
-    //public Card hand(int index)
-    //{
-    //    if(hand != null && hand.size() > 0)
-    //        return hand.get(index);
-    //    else
-    //    {
-    //       System.out.println("Your hand is empty. You should have won already!");
-    //       return new Card(0,"");
-    //    }
-    //}
-    
     public String toString()
     {
         return this.name;

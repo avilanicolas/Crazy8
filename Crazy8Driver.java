@@ -76,10 +76,8 @@ public class Crazy8Driver
         //  will be filled in with whitespace.
         String handText = "";
         System.out.println("Cards left in deck: "+ deck.size+"\n");
-        for(int ooga = 0; ooga < player.hand.size(); ooga++)
-        {
-             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
-        }
+        player.printHand();
+        
         handText += "\n\n";
         System.out.println(handText);
         
@@ -145,7 +143,10 @@ public class Crazy8Driver
                 }
                 else if(decision.equals("draw"))
                 {
-                    // Implement the draw mechanic.
+                    Card temp = deck.pop();
+                    System.out.println(player.toString()+"(You) has drawn "+temp.toString()+".");
+                    player.hand.add(temp);
+                    player.printHand();
                 }
                 else if(decision.equals("pass"))
                 {
@@ -302,10 +303,10 @@ public class Crazy8Driver
                 }
             }
         }
-        for(int ooga = 0; ooga < player.hand.size(); ooga++)
-        {
-             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
-        }
+        //for(int ooga = 0; ooga < player.hand.size(); ooga++)
+        //{
+        //     System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
+        //}
         System.out.println("Discard phase complete.");
         userin.nextLine();
         return discarded;

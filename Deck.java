@@ -83,5 +83,11 @@ public class Deck extends LStack<Card>
                 suitsUsed = true;
         }
         //this.stack = newDeck;
+        
+    }
+    
+    public Card draw()
+    {
+        return this.pop();
     }
 }
