@@ -7,11 +7,10 @@ public class Deck extends LStack<Card>
      * @return A new, randomly filled deck of the four suits, 1 through Ace.
      */
 	public Deck()
-   {
+    {
         // First we need to establish the cards we are using. It's easier to just load the cards
         // into suits, and then randomly pick from within the suits when we're filling the deck.
         // Here, we're just declaring lists of Cards, and filling them sequentially with 14 cards.
-        LinkedList<Card> newDeck = new LinkedList<Card>();
         ArrayList<Card> diamonds = new ArrayList<Card>();
         ArrayList<Card> hearts = new ArrayList<Card>();
         ArrayList<Card> clubs = new ArrayList<Card>();
@@ -74,12 +73,15 @@ public class Deck extends LStack<Card>
                 // This size decreases overtime as we remove cards from that particular suit, so in this way,
                 // we can randomly select a card from that decreasing list.
                 ranNum = ran.nextInt(suit.size());
-                newDeck.push(suit.get(ranNum));
-                suit.remove(ranNum);
+                this.push(suit.remove(ranNum));
             }
             if(diamonds.size() == 0 && hearts.size() == 0 && clubs.size() == 0 && spades.size() == 0)
                 suitsUsed = true;
         }
-        this.stack = newDeck;
     }
+	
+	public void shuffle()
+	{
+		//LinkedList<T>
+	}
 }
