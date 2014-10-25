@@ -1,5 +1,3 @@
- 
-
 import java.util.ArrayList;
 
 /**
@@ -18,8 +16,11 @@ public class Player
     /** Their hand of cards. */
     public ArrayList<Card> hand;
     
+    
     /** Manually set the AI behavior when you create this object. */
     public Behavior behavior;
+    
+    public Ability ability;
     
     /**
      * @param newName Their new name.

@@ -1,0 +1,26 @@
+#BlueJ class context
+comment0.params=args
+comment0.target=void\ main(String[])
+comment1.params=deck\ playerList\ cardStack
+comment1.target=void\ playerTurn(LStack<Card>,\ ArrayList<Player>,\ LStack<Card>)
+comment1.text=\nThis\ class\ should\ handle\ everything\ that\ goes\ on\ during\ a\ player's\ turn.\n@param\ deck\ The\ deck\ we\ might\ be\ drawing\ from.\n@param\ The\ list\ of\ players\ (their\ hands\ included)\ we're\ working\ with.\n@param\ cardStack\ The\ growing\ stack\ of\ cards.\n\n
+comment2.params=userin\ player\ discardPile
+comment2.target=boolean\ discard(Scanner,\ Player,\ LStack<Card>)
+comment2.text=\n@param\ userin\ The\ scanner\ to\ read\ from.\n@param\ player\ Our\ player.\n@param\ discardPile\ The\ growing\ discard\ pile.\n@return\ If\ a\ card\ was\ discarded\ or\ not.\n\n
+comment3.params=player\ deck
+comment3.target=Card\ drawCard(Player,\ LStack<Card>)
+comment4.params=dialogue\ character
+comment4.target=void\ pacedDialogue(String,\ Player)
+comment4.text=\npacedDialogue\ is\ a\ method\ we\ use\ that\ enters\ input\ and\ then\ tells\ the\ computer\ to\ wait.\ This\ makes\ it\ so\ that\ the\ player\ can\ notice\ and\ process\nthe\ dialogue,\ instead\ of\ it\ all\ happening\ at\ once.\ Usually,\ .pacedDialogue()\ will\ be\ followed\ another\ call\ to\ this\ method,\ resembling\ some\nartificial\ pause\ in\ speech.\n@param\ dialogue\ The\ string\ to\ print\ out.\n@param\ character\ The\ speaker\ for\ this\ line\ of\ dialogue.\n\n
+comment5.target=void\ helpMenu()
+comment5.text=\nPrint\ out\ and\ handle\ user\ input\ for\ a\ series\ of\ interactive\ menus\ that\ offer\ rules,\ context,\ and\ assistance\ to\ players.\n\n
+comment6.params=playerCache
+comment6.target=ArrayList<Player>\ instantiatePlayers(ArrayList<Player>)
+comment6.text=\nThis\ class\ is\ used\ to\ offer\ the\ player\ input\ to\ select\ a\ character\ to\ play\ as,\ how\ many\ AI\ opponents\ they\ will\ face,\nand\ randomly\ select\ their\ AI\ opponents.\n@param\ playerCache\ The\ cache\ of\ players\ to\ take\ a\ character\ from.\n@return\ A\ list\ of\ players\ for\ the\ game.\n\n
+comment7.params=deck\ players\ playerList
+comment7.target=ArrayList<ArrayList<Card>>\ dealCards(LStack<Card>,\ int,\ ArrayList<Player>)
+comment7.text=\n@param\ deck\ A\ collection\ of\ cards\ to\ randomly\ deal\ cards\ from.\n@param\ players\ The\ number\ of\ players\ to\ deal\ a\ hand\ to.\n@param\ playerList\ The\ list\ of\ players\ to\ deal\ cards\ to.\n@return\ A\ collection\ of\ hands\ filled\ with\ 8\ cards\ from\ the\ deck.\n\n@precondition\ That\ the\ deck\ passed\ into\ is\ greater\ than\ the\ number\ of\ players\ times\ eight.\n@postcondition\ That\ the\ deck\ passed\ into\ has\ decreased\ in\ size\ by\ a\ multiple\ of\ eight.\n\n
+comment8.target=LStack<Card>\ makeDeck()
+comment8.text=\n@return\ A\ new,\ randomly\ filled\ deck\ of\ the\ four\ suits,\ 1\ through\ Ace.\n\n
+comment9.target=ArrayList<Player>\ populatePlayerCache()
+numComments=10

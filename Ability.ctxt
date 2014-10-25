@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=String\ toString()
+comment1.target=int\ uses()
+comment2.params=deck\ discardPile\ players
+comment2.target=void\ use(LStack<Card>,\ LStack<Card>,\ ArrayList<Player>)
+numComments=3

@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=player
+comment0.target=CycleAbility(Player)
+comment1.target=int\ uses()
+comment2.target=String\ toString()
+comment3.params=deck\ discardPile\ players
+comment3.target=void\ use(LStack<Card>,\ LStack<Card>,\ ArrayList<Player>)
+numComments=4

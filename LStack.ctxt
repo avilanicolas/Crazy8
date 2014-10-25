@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=void\ LStack()
+comment1.target=boolean\ isEmpty()
+comment1.text=\n@return\ A\ boolean\ telling\ if\ the\ stack\ is\ empty\ or\ not.\n\n
+comment2.params=key
+comment2.target=int\ search(T)
+comment2.text=\nIterate\ through\ the\ stack\ for\ the\ desired\ element.\n@return\ An\ int\ containing\ the\ index\ of\ a\ found\ element.\ -1\ if\ it\ is\ not\ discovered.\n\n
+comment3.params=value
+comment3.target=void\ push(T)
+comment3.text=\nThe\ stack\ push\ method.\n@param\ value\ The\ value\ to\ push.\n\n
+comment4.target=T\ pop()
+comment4.text=\nThe\ stack\ pop\ method.\n@return\ The\ popped\ item.\n\n
+comment5.target=T\ peek()
+comment5.text=\nThe\ stack\ peek\ method.\n@return\ The\ top\ of\ the\ stack.\n\n
+comment6.params=index
+comment6.target=T\ get(int)
+comment6.text=\nGet\ the\ value\ of\ an\ item\ at\ a\ certain\ index\ with\ the\ stack.\nNOTE\:\ Stack\ indices\ begin\ from\ 1,\ not\ zero.\n@param\ index\ The\ index\ in\ the\ stack\ you\ want\ to\ get.\n@return\ The\ item\ at\ the\ specified\ index.\n\n
+numComments=7

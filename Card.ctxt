@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.params=newValue\ newSuit
+comment0.target=Card(int,\ String)
+comment0.text=\nConstructor\ for\ objects\ of\ class\ Card\n\n
+comment1.target=String\ toString()
+comment1.text=\n@return\ This\ card\ in\ the\ format\ of\:\ "{Value}\ of\ {suit}\ ({shorthand})"\n\n
+comment2.params=other
+comment2.target=int\ compareTo(Card)
+comment2.text=\nProvide\ a\ method\ that\ allows\ us\ to\ compare\ to\ cards.\ Card\ order\ is\ determined\ firstly\ by\ suit\ in\ this\ fashion\:\nDiamonds\ >\ Hearts\ >\ Spades\ >\ Clubs\nIf\ the\ suit\ of\ two\ cards\ is\ the\ same,\ then\ compare\ their\ value.\ne.g.\ A\ 2\ of\ Diamonds\ is\ greater\ than\ an\ Ace\ of\ Spaces\nA\ 9\ of\ Diamonds\ is\ less\ than\ a\ King\ of\ Diamonds\nA\ Queen\ of\ Hearts\ is\ greater\ than\ a\ Queen\ of\ Clubs.\nA\ card\ not\ of\ the\ four\ cardinal\ suits\ is\ ALWAYS\ considered\ less\ than\ a\ card\ form\ these\ suits.\n\n@param\ other\ The\ other\ card\ to\ compare\ this\ card\ to.\n@return\ -1,\ 0,\ 1\ Pending\ if\ this\ card\ are\ less\ than,\ equal\ to,\ or\ greater\ than\ the\ other.\n\n
+numComments=3

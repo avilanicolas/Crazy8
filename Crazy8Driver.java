@@ -19,7 +19,7 @@ public class Crazy8Driver
          */
         ArrayList<Player> players = new ArrayList<Player>();
         //players = instantiatePlayers(playerCache);
-        players.add(playerCache.get(1)); players.add(playerCache.get(8)); // --- This line is for debugging
+        players.add(playerCache.get(1)); players.add(playerCache.get(4)); // --- This line is for debugging
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
@@ -32,15 +32,17 @@ public class Crazy8Driver
         // Tell the player what's going on, draw a card, and put it into play.
         System.out.println("You go first.");
         Card firstCard = deck.pop();
-        System.out.println("The first card drawn is a(n) " + firstCard);
+        System.out.println("The first card drawn is a(n) " + firstCard + "\n\n");
         cardStack.push(firstCard);
         
         boolean exitGame = false;
         while(!exitGame)
         {
+            //players.get(1).ability.use(deck, cardStack, players);
             players.get(1).behavior.play(deck, players, cardStack);
             //Crazy8Driver.playerTurn(deck, players, cardStack);
-            exitGame = true;
+            if(players.get(1).hand.size() == 0)
+                exitGame = true;
         }
     }
     
@@ -285,10 +287,10 @@ public class Crazy8Driver
     
     private static Card drawCard(Player player, LStack<Card> deck)
     {
-	    Card newCard = deck.pop();
-	    player.hand.add(newCard);
-	    System.out.println(player.name +" drew a "+ newCard +"!");
-	    return newCard;
+        Card newCard = deck.pop();
+        player.hand.add(newCard);
+        System.out.println(player.name +" drew a "+ newCard +"!");
+        return newCard;
     }
     
     /**
@@ -630,7 +632,11 @@ public class Crazy8Driver
         playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
         playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
         
-        playerCache.get(8).behavior = new AggressiveBehavior(playerCache.get(8));
+        playerCache.get(8).behavior = new AggressiveCycle(playerCache.get(8));
+        playerCache.get(8).ability = new CycleAbility(playerCache.get(8));
+        
+        playerCache.get(4).behavior = new AggressiveFabricate(playerCache.get(4));
+        playerCache.get(4).ability = new FabricateAbility(playerCache.get(4));
         return playerCache;
     }
 }

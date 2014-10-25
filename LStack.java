@@ -1,5 +1,3 @@
- 
-
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.lang.Comparable;

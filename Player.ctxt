@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.params=newName\ opening\ greeting\ taunt
+comment0.target=Player(String,\ String,\ String,\ String)
+comment0.text=\n@param\ newName\ Their\ new\ name.\n@param\ opening\ Their\ opening\ line.\n@param\ greeting\ Their\ greeting\ line.\n@param\ taunt\ Their\ taunt\ response.\n\n
+comment1.target=Player()
+comment2.target=String\ toString()
+numComments=3

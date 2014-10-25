@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.params=owner
+comment0.target=AggressiveBehavior(Player)
+comment1.params=deck\ playerList\ discardPile
+comment1.target=void\ play(LStack<Card>,\ ArrayList<Player>,\ LStack<Card>)
+comment1.text=\n@param\ deck\ The\ current\ deck\ we're\ playing\ with.\n@param\ playerList\ The\ list\ of\ playrs\ we're\ playing\ with.\n@param\ discardPile\ The\ growing\ discardPile\ in\ the\ game.\n\n
+numComments=2
