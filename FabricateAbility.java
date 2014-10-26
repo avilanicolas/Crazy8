@@ -13,7 +13,7 @@ public class FabricateAbility implements Ability
     
     public String toString()
     {
-        return "Cycle a card from your hand into the discard pile, and draw a card from the deck. End your turn.\n\n\n\n";
+        return "Once per turn, you can create a valueless card of a random suit and place it on the top of the discard pile.\n\n\n\n";
     }
     
     public int uses() { return 1; }

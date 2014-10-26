@@ -107,7 +107,7 @@ public class AggressiveFabricate implements Behavior
                 if(playableCardsBySuit.size() >= 1)
                 {
                     if(owner.hand.size() == 1)
-                        System.out.println(owner + " shouted, \"" + owner.tauntText + "\"");
+                        System.out.println(owner.say(owner.tauntText, "shouted"));
                     
                     owner.hand.remove(playableCardsBySuit.get(0));
                     discardPile.push(playableCardsBySuit.get(0));

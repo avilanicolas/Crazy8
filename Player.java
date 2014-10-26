@@ -36,6 +36,12 @@ public class Player
         this.openingText = opening;
     }
     
+    public String say(String message, String description)
+    {
+        String dialogue = this.name + " " + description + " \"" + message + "\"";
+        return dialogue;
+    }
+    
     public Player() {}
     
     public String toString()

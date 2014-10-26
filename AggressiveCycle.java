@@ -84,7 +84,7 @@ public class AggressiveCycle implements Behavior
                 for(Card card : playableCardsByValue)
                 {
                     if(owner.hand.size() == 1)
-                        System.out.println("Thrall shouted, \"" + owner.tauntText + "\"");
+                        System.out.println(owner.say(owner.tauntText, "shouted"));
                     owner.hand.remove(card);
                     discardPile.push(card);
                     System.out.println(owner + " played a " + card);
