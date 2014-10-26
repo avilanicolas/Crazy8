@@ -34,7 +34,7 @@ public class Crazy8Driver
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
-        LStack<Card> cardStack = new LStack<Card>();
+        //LStack<Card> cardStack = new LStack<Card>();
         DiscardPile cardPile = new DiscardPile();
         
         // Tell the player what's going on, draw a card, and put it into play.
@@ -48,8 +48,31 @@ public class Crazy8Driver
         while(!exitGame)
         {
             Crazy8Driver.playerTurn(deck, players, cardPile);
-            exitGame = true;
-            Crazy8Driver.playerTurn(deck, players, cardPile);
+            int playersActive = 0;
+            for(Player p : players)
+            {
+                if(p.isplaying)
+                    playersActive++;
+            }
+            if(playersActive == 1)
+            {
+                exitGame = true;
+                if(players.get(0).isplaying)
+                   System.out.println("Congratulations! You have won!");
+                else
+                   System.out.println("You have lost...");
+            }
+            for(int i = 0; i < players.size(); i++)
+            {
+                if(players.get(i).hand.size() == 0)
+                {
+                    exitGame = true;
+                    if(i == 0)
+                        System.out.println("Congratulations! You have won!");
+                    else
+                        System.out.println("You have lost...");
+                }
+            }
         }
     }
     
@@ -68,7 +91,7 @@ public class Crazy8Driver
         // The following using the format method of the String class to cleanly print out a spaced out message
         // that displays the top of the stack.
         System.out.println("\n\n\n\n\n\n");
-        String currentSuit = Character.toUpperCase(cardStack.peek().suit.charAt(0)) + cardStack.peek().suit.substring(1);
+        String currentSuit = Character.toUpperCase(cardStack.topSuit.charAt(0)) + cardStack.topSuit.substring(1);
         String outText = String.format("%-20s %-13s %-20s %-20s\n\n", " ", "Top of stack: ", cardStack.peek(), "Current suit: " + currentSuit + "s");
         System.out.println(outText);
         
@@ -229,22 +252,23 @@ public class Crazy8Driver
      *  Things to work on for discard: 
      *     Checking the validity of THREE cards in one go.
      */
-    private static boolean discard(Scanner userin, Player player, LStack<Card> discardPile)
+    private static boolean discard(Scanner userin, Player player, DiscardPile discardPile)
     {
         Scanner line;
         boolean discarded = false;
         boolean[] valid = {false,false,false};           //Store validity of cards
         ArrayList<Integer> rmNum = new ArrayList<>();    //Indexes that will be removed from hand.
         int cardsRemoved = 0, j = 0, count = 0, chosenCard = -1;
+        String currentSuit = "";
         Card disCard = new Card(0,"A");
 
-        //while(!discarded); //Needs to be implemented to wait until cards are discarded.
+        //Needs to be implemented to wait until cards are discarded.
         System.out.println("\nEnter the number for each card you would like to discard(max: 3).\nEnter any character to stop.");
         //Asks for index input and stores it into an ArrayList.
         
         while(count < MAXRM)
         {
-            if(userin.hasNextInt() && cardsRemoved < MAXRM)
+            if(userin.hasNextInt() && count < MAXRM)
             {
                rmNum.add(userin.nextInt()-1);
                count++;
@@ -264,7 +288,6 @@ public class Crazy8Driver
         for(int i = 0; i < rmNum.size(); i++)
         {
             disCard = (rmNum.get(i) == CHEAT)? player.hand.get(0) : player.hand.get(rmNum.get(i));
-            
             if(rmNum.get(i) == CHEAT)
             {
                 System.out.println("You're cheating!!! Discarding "+player.hand.get(i).toString());
@@ -278,10 +301,19 @@ public class Crazy8Driver
             }
             else
             {
-               if((discardPile.peek().validPlay(disCard) && cardsRemoved == 0)|| (cardsRemoved > 0 && discardPile.peek().sameRank(player.hand, count)))
+               if(cardsRemoved == 0 && disCard.value == discardPile.EIGHT)
+               {
+                   disCard.suit = Crazy8Driver.getSuit();
+                   System.out.println("Discarding a "+player.hand.get(rmNum.get(i)).toString());
+                   valid[i] = discarded = true;
+                   cardsRemoved += 1;
+               }
+               else if((cardsRemoved == 0 && discardPile.peek().validPlay(disCard)) ||
+                  (cardsRemoved > 0 && valid[i-1] && discardPile.peek().value == disCard.value))
                {
                    System.out.println("Discarding a "+player.hand.get(rmNum.get(i)).toString());
                    valid[i] = discarded = true;
+                   cardsRemoved += 1;
                }
                else
                {
@@ -302,19 +334,46 @@ public class Crazy8Driver
                 {
                    if(i > 0 && rmNum.get(i-1) < rmNum.get(i)) offset += 1;    //Increase offset if removing cards from a lower index.
                    if(i > 1 && rmNum.get(i-2) < rmNum.get(i)) offset += 1;
-                   discardPile.push(player.hand.remove((int)rmNum.get(i)-offset));
+                   //Check to see if there is an eight in the played cards.
+                   discardPile.discard(player.hand.remove((int)rmNum.get(i)-offset));
                 }
             }
         }
-        //for(int ooga = 0; ooga < player.hand.size(); ooga++)
-        //{
-        //     System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
-        //}
+        if(count > 3)
+           System.out.println("Could not discard the rest of the cards: Max 3 card plays in one turn.");
         System.out.println("Discard phase complete.");
         userin.nextLine();
         return discarded;
     }
     
+    //discard(...) helper method
+    public static String getSuit()
+    {
+        Scanner input = new Scanner(System.in);
+        ArrayList<String> suits = new ArrayList<>();
+        suits.add("diamond");
+        suits.add("heart");
+        suits.add("club");
+        suits.add("spade");
+        String temp = "";
+        
+        boolean valid = false;
+        while(true)
+        {
+            System.out.println("What suit would you like to choose? ");
+            temp = input.nextLine();
+            if(suits.contains(temp))
+               return temp;
+            else
+            {
+               valid = false;
+               input.nextLine();
+               System.out.println("Invalid input for suit.");
+               System.out.println("Please use all lowercase letters and no numbers.");
+            }
+        }
+    }
+
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process
      * the dialogue, instead of it all happening at once. Usually, .pacedDialogue() will be followed another call to this method, resembling some

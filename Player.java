@@ -18,6 +18,7 @@ public class Player
     /** Their hand of cards. */
     public ArrayList<Card> hand;
     
+    public boolean isplaying;
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -30,6 +31,7 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
+        isplaying = true;
         //this.hand = newHand;
     }
     
@@ -48,6 +50,10 @@ public class Player
        System.out.printf("\n");
     }
     
+    public void draw(Deck deck)
+    {
+    
+    }
     /**
      * @return This player's name.
      */

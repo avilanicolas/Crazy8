@@ -110,13 +110,4 @@ public class Card
         else
             return false;
     }
-    
-    //Extra method to check that we can have multiple cards played
-    //   in one turn.
-    //   All of the ranks being played must be the same as the discard Pile's top card.
-    public boolean sameRank(ArrayList<Card> hand, int amount)
-    {
-        if(amount == 0) return (this.value == hand.get(0).value);
-        return (this.value == hand.get(amount).value) && sameRank(hand, amount-1);
-    }
 }
