@@ -19,6 +19,8 @@ public class Player
     public ArrayList<Card> hand;
     
     public boolean isplaying;
+    /** Manually set the AI behavior when you create this object. */
+    public Behavior behavior;
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -36,7 +38,6 @@ public class Player
     }
     
     public Player() {}
-    
     /**
       *  Print the player's hand in a list from 1-8.
       *
@@ -52,7 +53,7 @@ public class Player
     
     public void draw(Deck deck)
     {
-    
+        hand.add(deck.pop());
     }
     /**
      * @return This player's name.

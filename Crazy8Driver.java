@@ -374,6 +374,13 @@ public class Crazy8Driver
         }
     }
 
+    private static Card drawCard(Player player, LStack<Card> deck)
+    {
+	    Card newCard = deck.pop();
+	    player.hand.add(newCard);
+	    System.out.println(player.name +" drew a "+ newCard +"!");
+	    return newCard;
+    }
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process
      * the dialogue, instead of it all happening at once. Usually, .pacedDialogue() will be followed another call to this method, resembling some
@@ -619,7 +626,7 @@ public class Crazy8Driver
         for(int i = 0; i < players; i++) playerList.get(i).hand = hands.get(i);
         return hands;
     }
-    
+    //Deck class should have makeDeck()
     private static ArrayList<Player> populatePlayerCache()
     {
         ArrayList<Player> playerCache = new ArrayList<Player>();
@@ -633,6 +640,7 @@ public class Crazy8Driver
         playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
         playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
         
+        playerCache.get(8).behavior = new AggressiveBehavior(playerCache.get(8));
         return playerCache;
     }
 }
