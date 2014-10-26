@@ -82,7 +82,6 @@ public class Deck extends LStack<Card>
                 suitsUsed = true;
         }
     }
-<<<<<<< HEAD
 	
 	public void shuffle()
 	{
@@ -94,7 +93,6 @@ public class Deck extends LStack<Card>
 	}
  
 }
-=======
     
     public void shuffle()
 	{
@@ -114,4 +112,3 @@ public class Deck extends LStack<Card>
 		}
 	}
 }
->>>>>>> 21c37d844cd1c32749c8a0d32b02fa1d7c8cd00b
