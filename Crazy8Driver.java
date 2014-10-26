@@ -540,7 +540,7 @@ public class Crazy8Driver
     /**
      * @return A new, randomly filled deck of the four suits, 1 through Ace.
      */
-    private static LStack<Card> makeDeck()
+    /** private static LStack<Card> makeDeck()
     {
         // First we need to establish the cards we are using. It's easier to just load the cards
         // into suits, and then randomly pick from within the suits when we're filling the deck.
@@ -616,6 +616,7 @@ public class Crazy8Driver
         }
         return deck;
     }
+    */
     
     private static ArrayList<Player> populatePlayerCache()
     {
