@@ -53,7 +53,9 @@ public class CrazyEightGUI
          {
             String toLoad = s+v;
             System.out.println("Trying to load "+toLoad+".");
-            cardSprites[suit][val-1] = ImageIO.read(new File("Classic/"+toLoad+".png"));
+            //File image = new File("Classic/android.jpg");
+            BufferedImage bi = ImageIO.read(new File("Classic/andriod.jpg"));//image);
+            cardSprites[suit][val-1] = bi;
          }
          catch(IOException e)
          {
@@ -86,7 +88,7 @@ public class CrazyEightGUI
       BufferedImage drawPile = null;
       try
       {
-         drawPile = ImageIO.read(new File("/Classic/Card-Back.png"));
+         drawPile = ImageIO.read(new File("Classic/Card-Back.png"));
       }
       catch(Exception e)
       {
