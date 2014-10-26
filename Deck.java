@@ -82,6 +82,7 @@ public class Deck extends LStack<Card>
                 suitsUsed = true;
         }
     }
+<<<<<<< HEAD
 	
 	public void shuffle()
 	{
@@ -93,3 +94,24 @@ public class Deck extends LStack<Card>
 	}
  
 }
+=======
+    
+    public void shuffle()
+	{
+		ArrayList<Card> tempDeck = new ArrayList<Card>();
+		// Fill the new list of cards with the cards still in the deck.
+		while(!this.isEmpty())
+		{
+			tempDeck.add(this.pop());
+		}
+		// Randomly push the cards from tempDeck to the original Deck.
+		Random randy = new Random();
+		int ranInt;
+		while(!tempDeck.isEmpty())
+		{
+			ranInt = randy.nextInt(tempDeck.size());
+			this.push(tempDeck.remove(ranInt));
+		}
+	}
+}
+>>>>>>> 21c37d844cd1c32749c8a0d32b02fa1d7c8cd00b
