@@ -82,6 +82,23 @@ public class Deck extends LStack<Card>
             if(diamonds.size() == 0 && hearts.size() == 0 && clubs.size() == 0 && spades.size() == 0)
                 suitsUsed = true;
         }
-        //this.stack = newDeck;
     }
+    
+    public void shuffle()
+	{
+		ArrayList<Card> tempDeck = new ArrayList<Card>();
+		// Fill the new list of cards with the cards still in the deck.
+		while(!this.isEmpty())
+		{
+			tempDeck.add(this.pop());
+		}
+		// Randomly push the cards from tempDeck to the original Deck.
+		Random randy = new Random();
+		int ranInt;
+		while(!tempDeck.isEmpty())
+		{
+			ranInt = randy.nextInt(tempDeck.size());
+			this.push(tempDeck.remove(ranInt));
+		}
+	}
 }
