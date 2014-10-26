@@ -100,3 +100,4 @@ public class Deck extends LStack<Card>
 			this.push(tempDeck.remove(ranInt));
 		}
 	}
+}
