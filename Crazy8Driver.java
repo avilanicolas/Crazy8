@@ -5,9 +5,7 @@ import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
 import java.util.InputMismatchException;
 import java.util.regex.Pattern;
-//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
-//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
-//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
+
 
 public class Crazy8Driver
 {
@@ -29,12 +27,8 @@ public class Crazy8Driver
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
-<<<<<<< HEAD
-        //LStack<Card> deck = Crazy8Driver.makeDeck();
-		  Deck deck = new Deck();
-=======
+
         Deck deck = new Deck();
->>>>>>> eadbc7d3fcbe8756655e44c81ad9a07ac51e7776
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
@@ -61,7 +55,7 @@ public class Crazy8Driver
      * @param The list of players (their hands included) we're working with.
      * @param cardStack The growing stack of cards.
      */
-    private static void playerTurn(LStack<Card> deck, ArrayList<Player> playerList, LStack<Card> cardStack)
+    private static void playerTurn(Deck deck, ArrayList<Player> playerList, LStack<Card> cardStack)
     {
         // So we don't have to repeatedly call playerList.get(0) to refer to the player, let's just make a 
         // variable that does that for us.
@@ -316,6 +310,7 @@ public class Crazy8Driver
         return discarded;
     }
 	
+   /**
 	private static Card drawCard(Player player, LStack<Card> deck)
     {
 		Card newCard = deck.pop();
@@ -323,6 +318,7 @@ public class Crazy8Driver
 		System.out.println(player.name +" drew a "+ newCard +"!");
 		return newCard;
     }
+    */
     
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process
@@ -547,7 +543,7 @@ public class Crazy8Driver
      * @precondition That the deck passed into is greater than the number of players times eight.
      * @postcondition That the deck passed into has decreased in size by a multiple of eight.
      */
-    private static ArrayList<ArrayList<Card>> dealCards(LStack<Card> deck, int players, ArrayList<Player> playerList)
+    private static ArrayList<ArrayList<Card>> dealCards(Deck deck, int players, ArrayList<Player> playerList)
     {
         // Instantiate a list of dealt hands. This list isn't as important as giving these actual hands to player characters
         // but we might need the list of hands for some reason.
@@ -568,86 +564,6 @@ public class Crazy8Driver
         // And lastly, give every player a dealt hand.
         for(int i = 0; i < players; i++) playerList.get(i).hand = hands.get(i);
         return hands;
-    }
-    
-    /**
-     * @return A new, randomly filled deck of the four suits, 1 through Ace.
-     */
-    private static LStack<Card> makeDeck()
-    {
-        // First we need to establish the cards we are using. It's easier to just load the cards
-        // into suits, and then randomly pick from within the suits when we're filling the deck.
-        // Here, we're just declaring lists of Cards, and filling them sequentially with 14 cards.
-        LStack<Card> deck = new LStack<Card>();
-        ArrayList<Card> diamonds = new ArrayList<Card>();
-        ArrayList<Card> hearts = new ArrayList<Card>();
-        ArrayList<Card> clubs = new ArrayList<Card>();
-        ArrayList<Card> spades = new ArrayList<Card>();
-        for(int i = 2; i <= 14; i++) diamonds.add(new Card(i, "diamond"));
-        for(int i = 2; i <= 14; i++) hearts.add(new Card(i, "heart"));
-        for(int i = 2; i <= 14; i++) clubs.add(new Card(i, "club"));
-        for(int i = 2; i <= 14; i++) spades.add(new Card(i, "spade"));
-        
-        // Now we need to randomly select from the above suits and add each one to the deck
-        // removing from their suit's list. We do this until all suits are empty.
-        boolean suitsUsed = false; // If all suits are used up, exit the loop.
-        Random ran = new Random();
-        int ranNum = 0; // This determines the random index from the suit list we'll take from.
-        int ranSuit = 0; // This determines the random suit we'll select.
-        // We'll store the suits that are currently empty, so we have a nice collection of empty suits
-        // as they are used up.
-        ArrayList<Integer> emptySuits = new ArrayList<Integer>();
-        while(!suitsUsed)
-        {
-            // Here, we declare which suit we'll be working with -- however, what if we recieve a 
-            // random integer for a matching suit that is EMPTY? The following while loop examines
-            // what we get, and makes sure we only progress until we know we'll be working with a suit
-            // that is not empty.
-            ranSuit = ran.nextInt(4);
-            while(emptySuits.contains(ranSuit)) ranSuit = ran.nextInt(4);
-            
-            // Here, suit will be pointing to one of the non-empty declared suits above. This way,
-            // we don't need to hardcode for each suit, but we can just refer to the suit we're
-            // working with as "suit."
-            ArrayList<Card> suit = new ArrayList<Card>();
-            switch(ranSuit)
-            {
-                case 0:
-                    suit = diamonds;
-                    break;
-                case 1:
-                    suit = hearts;
-                    break;
-                case 2:
-                    suit = clubs;
-                    break;
-                case 3:
-                    suit = spades;
-                    break;
-            }
-            
-            // Currently, if we randomly select an empty suit that hasn't been added to emptySuits,
-            // this is where we'd add that suit to emptySuits. 
-            //
-            // The first else condition is the portion of the method that actually adds a randomly
-            // selected card, and pushes that card into LStack deck. Once we do that, we're then sure
-            // to remove that card from its suit.
-            //
-            // The final else statement flips the kill condition "suitsUsed" once every suit is emptied.
-            if(suit.size() == 0) emptySuits.add(ranSuit);
-            else if(suit.size() != 0)
-            {
-                // We declare ranNum to be a number from 0 to the size of the current suit we're working with.
-                // This size decreases overtime as we remove cards from that particular suit, so in this way,
-                // we can randomly select a card from that decreasing list.
-                ranNum = ran.nextInt(suit.size());
-                deck.push(suit.get(ranNum));
-                suit.remove(ranNum);
-            }
-            if(diamonds.size() == 0 && hearts.size() == 0 && clubs.size() == 0 && spades.size() == 0)
-                suitsUsed = true;
-        }
-        return deck;
     }
     
     private static ArrayList<Player> populatePlayerCache()

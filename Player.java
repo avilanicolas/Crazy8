@@ -43,4 +43,12 @@ public class Player
     {
         return this.name;
     }
+	
+	public Card drawCard(Deck deck)
+    {
+		Card newCard = deck.pop();
+		this.hand.add(newCard);
+		System.out.println(this.name +" drew a "+ newCard +"!");
+		return newCard;
+    }
 }
