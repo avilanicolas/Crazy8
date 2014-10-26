@@ -3,10 +3,16 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
+import java.util.InputMismatchException;
 import java.util.regex.Pattern;
+//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
+//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
+//*********************************WARNING! WARNING! NOT COMPLETELY IMPLEMENTED!****************************//
 
 public class Crazy8Driver
 {
+    public static final int MAXRM = 3;
+    public static final int CHEAT = -2;
     public static void main(String[] args)
     {
         /* Here we'll instantiate a cache of of players for the program to choose from later on. There is a better way to declare a bunch of Players
@@ -23,8 +29,12 @@ public class Crazy8Driver
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
+<<<<<<< HEAD
         //LStack<Card> deck = Crazy8Driver.makeDeck();
 		  Deck deck = new Deck();
+=======
+        Deck deck = new Deck();
+>>>>>>> eadbc7d3fcbe8756655e44c81ad9a07ac51e7776
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
@@ -34,7 +44,7 @@ public class Crazy8Driver
         System.out.println("You go first.");
         Card firstCard = deck.pop();
         System.out.println("The first card drawn is a(n) " + firstCard);
-        cardStack.push(firstCard);
+        cardStack.push(firstCard);        
         
         boolean exitGame = false;
         while(!exitGame)
@@ -70,11 +80,10 @@ public class Crazy8Driver
         //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
         //  will be filled in with whitespace.
         String handText = "";
-        for(Card card : player.hand)
+        System.out.println("Cards left in deck: "+ deck.size+"\n");
+        for(int ooga = 0; ooga < player.hand.size(); ooga++)
         {
-            handText += String.format("%-25s", card);
-            // Make every row 4 cards in length, for less wide displays.
-            if(player.hand.indexOf(card) == 3) handText += "\n";
+             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
         }
         handText += "\n\n";
         System.out.println(handText);
@@ -148,7 +157,7 @@ public class Crazy8Driver
                     // Flesh out this mechanic.
                     decisionReached = true;
                 }
-                else if(decision.equals("discard"))
+                else if(decision.equals("discard"))            //Caution: Under Construction
                 {
                     if(!Crazy8Driver.discard(userIn, player, cardStack))
                     {
@@ -217,70 +226,93 @@ public class Crazy8Driver
      * @param player Our player.
      * @param discardPile The growing discard pile.
      * @return If a card was discarded or not.
+     *
+     *  Things to work on for discard: 
+     *     Checking the validity of THREE cards in one go.
      */
     private static boolean discard(Scanner userin, Player player, LStack<Card> discardPile)
     {
+        Scanner line;
         boolean discarded = false;
+        boolean[] valid = {false,false,false};           //Store validity of cards
+        ArrayList<Integer> rmNum = new ArrayList<>();    //Indexes that will be removed from hand.
+        int cardsRemoved = 0, j = 0, count = 0, chosenCard = -1;
+        Card disCard = new Card(0,"A");
+
+        //while(!discarded); //Needs to be implemented to wait until cards are discarded.
+        System.out.println("\nEnter the number for each card you would like to discard(max: 3).\nEnter any character to stop.");
+        //Asks for index input and stores it into an ArrayList.
         
-        // This patter matches any text that suits the shourthand we use for cards.
-        Pattern pattern = Pattern.compile("(10)[a-zA-Z]|[1-9ajkqAJKQ][a-zA-Z]");
-        System.out.println("\n\n Enter the shorthand for each card you would like to discard.");
-        int i = 0;
-        int cardsRemoved = 0;
-        int cardIndex = -1;
-        while(userin.hasNext(pattern) && cardsRemoved < 3)
+        while(count < MAXRM)
         {
-            /* While the next input follows our shorthand pattern, and we haven't discarded more than 3 cards, process
-             * the user input to determine if we can discard the card.
-             * 
-             */
-            
-            String discardText = "";
-            if(cardsRemoved < 3) discardText = userin.next();
-            boolean nextInHand = false;
-            for(Card card : player.hand)
+            if(userin.hasNextInt() && cardsRemoved < MAXRM)
             {
-                if(discardText.equals(card.shortText))
-                {
-                    System.out.println("Discarding a " + card);
-                    nextInHand = true;
-                    discarded = true;
-                    
-                    if(player.hand.indexOf(card) > -1)
-                    {
-                        discardPile.push(card);
-                        cardIndex = player.hand.indexOf(card);
-                    }
-                    else
-                    {
-                        cardIndex = -1;   
-                    }
-                        
-                    
-                    cardsRemoved++;
-                }
+               rmNum.add(userin.nextInt()-1);
+               count++;
             }
-            
-            if(cardIndex > -1) player.hand.remove(cardIndex);
-            
-            String handText = "";
-            for(Card card : player.hand)
+            else
             {
-                handText += String.format("%-25s", card);
-                // Make every row 4 cards in length, for less wide displays.
-                if(player.hand.indexOf(card) == 3) handText += "\n";
-            }
-            handText += "\n\n";
-            System.out.println(handText);            
-            
-            if(!nextInHand)
-            {
-                System.out.println("\n'" + discardText + "' not a valid card in your hand.");
-                System.out.println("Will end after 3 cards have been discarded. \n\n\n");
+               System.out.println("Ending 'discard' input...");
+               break;
             }
         }
-        userin.next();
-        System.out.println("\nDiscard phase complete.");
+        
+        /* 
+         * This section responds to the input indexes and sets the validity of the cards in
+         * 'valid' array.
+         * CHEAT = -2, and it auto-plays the first card in your hand.
+         */
+        for(int i = 0; i < rmNum.size(); i++)
+        {
+            disCard = (rmNum.get(i) == CHEAT)? player.hand.get(0) : player.hand.get(rmNum.get(i));
+            
+            if(rmNum.get(i) == CHEAT)
+            {
+                System.out.println("You're cheating!!! Discarding "+player.hand.get(i).toString());
+                valid[i] = discarded = true;
+            }
+            else if(rmNum.get(i) >= player.hand.size() || rmNum.get(i) < 0)
+            {
+                System.out.println("\n'" + disCard + "' not a valid card in your hand.");
+                System.out.println("Will end after 3 cards max have been discarded. \n\n\n");
+                valid[i] = false;
+            }
+            else
+            {
+               if((discardPile.peek().validPlay(disCard) && cardsRemoved == 0)|| (cardsRemoved > 0 && discardPile.peek().sameRank(player.hand, count)))
+               {
+                   System.out.println("Discarding a "+player.hand.get(rmNum.get(i)).toString());
+                   valid[i] = discarded = true;
+               }
+               else
+               {
+                   System.out.println("Cannot play "+player.hand.get(rmNum.get(i)).toString()+" from your hand. Moving on...");
+                   valid[i] = false;
+               }
+            }
+        }
+        //Now, we remove all of the valid cards from the hand.
+        for(int i = 0; i < rmNum.size(); i++)
+        {
+            int offset = 0;
+            if(valid[i])
+            {
+                if(rmNum.get(i) == CHEAT)
+                   discardPile.push(player.hand.remove(0));
+                else
+                {
+                   if(i > 0 && rmNum.get(i-1) < rmNum.get(i)) offset += 1;    //Increase offset if removing cards from a lower index.
+                   if(i > 1 && rmNum.get(i-2) < rmNum.get(i)) offset += 1;
+                   discardPile.push(player.hand.remove((int)rmNum.get(i)-offset));
+                }
+            }
+        }
+        for(int ooga = 0; ooga < player.hand.size(); ooga++)
+        {
+             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
+        }
+        System.out.println("Discard phase complete.");
+        userin.nextLine();
         return discarded;
     }
 	

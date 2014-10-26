@@ -17,7 +17,7 @@ public class Player
     public String tauntText = "";
     /** Their hand of cards. */
     public ArrayList<Card> hand;
-    
+    public boolean isplaying;
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -30,6 +30,7 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
+        this.isplaying = true;
         //this.hand = newHand;
     }
     
