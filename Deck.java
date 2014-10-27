@@ -3,7 +3,8 @@ import java.util.*;
 
 public class Deck extends LStack<Card>
 {
-	 /** Inherits: push(...), pop(), isEmpty(), get(...), peek(), search(...)
+	/**
+	 * Inherits: push(...), pop(), isEmpty(), get(...), peek(), search(...)
      * @return A new, randomly filled deck of the four suits, 1 through Ace.
      */
 	public Deck()

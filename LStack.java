@@ -36,6 +36,15 @@ public class LStack<T>
     }
     
     /**
+     *  This is used to show how many cards are left in the deck o' cards.
+     *  @return size of stack
+     */
+    public int size()
+    {
+       return size;
+    }
+    
+    /**
      * Iterate through the stack for the desired element.
      * @return An int containing the index of a found element. -1 if it is not discovered.
      */

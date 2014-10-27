@@ -32,20 +32,46 @@ public class Crazy8Driver
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
-        LStack<Card> cardStack = new LStack<Card>();
+        //LStack<Card> cardStack = new LStack<Card>();
+        DiscardPile cardPile = new DiscardPile();
         
         // Tell the player what's going on, draw a card, and put it into play.
         System.out.println("You go first.");
-        Card firstCard = deck.pop();
-        System.out.println("The first card drawn is a(n) " + firstCard);
-        cardStack.push(firstCard);        
-        
+
+        //Card firstCard = deck.pop();
+        cardPile.push(deck.pop());
+        System.out.println("The first card drawn is a(n) " + cardPile.peek());
+        //cardStack.push(firstCard);
+
         boolean exitGame = false;
         while(!exitGame)
         {
-            Crazy8Driver.playerTurn(deck, players, cardStack);
-            exitGame = true;
-            Crazy8Driver.playerTurn(deck, players, cardStack);
+            Crazy8Driver.playerTurn(deck, players, cardPile);
+            int playersActive = 0;
+            for(Player p : players)
+            {
+                if(p.isplaying)
+                    playersActive++;
+            }
+            if(playersActive == 1)
+            {
+                exitGame = true;
+                if(players.get(0).isplaying)
+                   System.out.println("Congratulations! You have won!");
+                else
+                   System.out.println("You have lost...");
+            }
+            for(int i = 0; i < players.size(); i++)
+            {
+                if(players.get(i).hand.size() == 0)
+                {
+                    exitGame = true;
+                    if(i == 0)
+                        System.out.println("Congratulations! You have won!");
+                    else
+                        System.out.println("You have lost...");
+                }
+            }
         }
     }
     
@@ -55,7 +81,8 @@ public class Crazy8Driver
      * @param The list of players (their hands included) we're working with.
      * @param cardStack The growing stack of cards.
      */
-    private static void playerTurn(Deck deck, ArrayList<Player> playerList, LStack<Card> cardStack)
+
+    private static void playerTurn(Deck deck, ArrayList<Player> playerList, DiscardPile cardStack)
     {
         // So we don't have to repeatedly call playerList.get(0) to refer to the player, let's just make a 
         // variable that does that for us.
@@ -64,7 +91,7 @@ public class Crazy8Driver
         // The following using the format method of the String class to cleanly print out a spaced out message
         // that displays the top of the stack.
         System.out.println("\n\n\n\n\n\n");
-        String currentSuit = Character.toUpperCase(cardStack.peek().suit.charAt(0)) + cardStack.peek().suit.substring(1);
+        String currentSuit = Character.toUpperCase(cardStack.topSuit.charAt(0)) + cardStack.topSuit.substring(1);
         String outText = String.format("%-20s %-13s %-20s %-20s\n\n", " ", "Top of stack: ", cardStack.peek(), "Current suit: " + currentSuit + "s");
         System.out.println(outText);
         
@@ -74,11 +101,8 @@ public class Crazy8Driver
         //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
         //  will be filled in with whitespace.
         String handText = "";
-        System.out.println("Cards left in deck: "+ deck.size+"\n");
-        for(int ooga = 0; ooga < player.hand.size(); ooga++)
-        {
-             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
-        }
+        System.out.println("Cards left in deck: "+ deck.size+"\n");        player.printHand();
+        
         handText += "\n\n";
         System.out.println(handText);
         
@@ -144,7 +168,10 @@ public class Crazy8Driver
                 }
                 else if(decision.equals("draw"))
                 {
-                    // Implement the draw mechanic.
+                    Card temp = deck.pop();
+                    System.out.println(player.toString()+"(You) has drawn "+temp.toString()+".");
+                    player.hand.add(temp);
+                    player.printHand();
                 }
                 else if(decision.equals("pass"))
                 {
@@ -224,22 +251,23 @@ public class Crazy8Driver
      *  Things to work on for discard: 
      *     Checking the validity of THREE cards in one go.
      */
-    private static boolean discard(Scanner userin, Player player, LStack<Card> discardPile)
+    private static boolean discard(Scanner userin, Player player, DiscardPile discardPile)
     {
         Scanner line;
         boolean discarded = false;
         boolean[] valid = {false,false,false};           //Store validity of cards
         ArrayList<Integer> rmNum = new ArrayList<>();    //Indexes that will be removed from hand.
         int cardsRemoved = 0, j = 0, count = 0, chosenCard = -1;
+        String currentSuit = "";
         Card disCard = new Card(0,"A");
 
-        //while(!discarded); //Needs to be implemented to wait until cards are discarded.
+        //Needs to be implemented to wait until cards are discarded.
         System.out.println("\nEnter the number for each card you would like to discard(max: 3).\nEnter any character to stop.");
         //Asks for index input and stores it into an ArrayList.
         
         while(count < MAXRM)
         {
-            if(userin.hasNextInt() && cardsRemoved < MAXRM)
+            if(userin.hasNextInt() && count < MAXRM)
             {
                rmNum.add(userin.nextInt()-1);
                count++;
@@ -259,7 +287,6 @@ public class Crazy8Driver
         for(int i = 0; i < rmNum.size(); i++)
         {
             disCard = (rmNum.get(i) == CHEAT)? player.hand.get(0) : player.hand.get(rmNum.get(i));
-            
             if(rmNum.get(i) == CHEAT)
             {
                 System.out.println("You're cheating!!! Discarding "+player.hand.get(i).toString());
@@ -273,10 +300,19 @@ public class Crazy8Driver
             }
             else
             {
-               if((discardPile.peek().validPlay(disCard) && cardsRemoved == 0)|| (cardsRemoved > 0 && discardPile.peek().sameRank(player.hand, count)))
+               if(cardsRemoved == 0 && disCard.value == discardPile.EIGHT)
+               {
+                   disCard.suit = Crazy8Driver.getSuit();
+                   System.out.println("Discarding a "+player.hand.get(rmNum.get(i)).toString());
+                   valid[i] = discarded = true;
+                   cardsRemoved += 1;
+               }
+               else if((cardsRemoved == 0 && discardPile.peek().validPlay(disCard)) ||
+                  (cardsRemoved > 0 && valid[i-1] && discardPile.peek().value == disCard.value))
                {
                    System.out.println("Discarding a "+player.hand.get(rmNum.get(i)).toString());
                    valid[i] = discarded = true;
+                   cardsRemoved += 1;
                }
                else
                {
@@ -297,21 +333,47 @@ public class Crazy8Driver
                 {
                    if(i > 0 && rmNum.get(i-1) < rmNum.get(i)) offset += 1;    //Increase offset if removing cards from a lower index.
                    if(i > 1 && rmNum.get(i-2) < rmNum.get(i)) offset += 1;
-                   discardPile.push(player.hand.remove((int)rmNum.get(i)-offset));
+                   //Check to see if there is an eight in the played cards.
+                   discardPile.discard(player.hand.remove((int)rmNum.get(i)-offset));
                 }
             }
         }
-        for(int ooga = 0; ooga < player.hand.size(); ooga++)
-        {
-             System.out.println((ooga+1)+". "+player.hand.get(ooga).toString());
-        }
+        if(count > 3)
+           System.out.println("Could not discard the rest of the cards: Max 3 card plays in one turn.");
         System.out.println("Discard phase complete.");
         userin.nextLine();
         return discarded;
     }
-	
-   /**
-	private static Card drawCard(Player player, LStack<Card> deck)
+
+    //discard(...) helper method
+    public static String getSuit()
+    {
+        Scanner input = new Scanner(System.in);
+        ArrayList<String> suits = new ArrayList<>();
+        suits.add("diamond");
+        suits.add("heart");
+        suits.add("club");
+        suits.add("spade");
+        String temp = "";
+        
+        boolean valid = false;
+        while(true)
+        {
+            System.out.println("What suit would you like to choose? ");
+            temp = input.nextLine();
+            if(suits.contains(temp))
+               return temp;
+            else
+            {
+               valid = false;
+               input.nextLine();
+               System.out.println("Invalid input for suit.");
+               System.out.println("Please use all lowercase letters and no numbers.");
+            }
+        }
+    }
+	/**
+    private static Card drawCard(Player player, Deck deck)
     {
 		Card newCard = deck.pop();
 		player.hand.add(newCard);
@@ -565,7 +627,8 @@ public class Crazy8Driver
         for(int i = 0; i < players; i++) playerList.get(i).hand = hands.get(i);
         return hands;
     }
-    
+
+    //Deck class should have makeDeck()
     private static ArrayList<Player> populatePlayerCache()
     {
         ArrayList<Player> playerCache = new ArrayList<Player>();
@@ -579,6 +642,7 @@ public class Crazy8Driver
         playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
         playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
         
+        playerCache.get(8).behavior = new AggressiveBehavior(playerCache.get(8));
         return playerCache;
     }
 }

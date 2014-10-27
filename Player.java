@@ -17,7 +17,10 @@ public class Player
     public String tauntText = "";
     /** Their hand of cards. */
     public ArrayList<Card> hand;
+    
     public boolean isplaying;
+    /** Manually set the AI behavior when you create this object. */
+    public Behavior behavior;
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -30,12 +33,30 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
-        this.isplaying = true;
+        isplaying = true;
         //this.hand = newHand;
     }
     
     public Player() {}
+    /**
+      *  Print the player's hand in a list from 1-8.
+      *
+      */
+    public void printHand()
+    {
+       for(int i = 0; i < hand.size(); i++)
+       {
+           System.out.println((i+1)+". "+hand.get(i).toString());
+       }
+       System.out.printf("\n");
+    }
     
+    /**
+	public void draw(Deck deck)
+    {
+        hand.add(deck.pop());
+    }
+	*/
     /**
      * @return This player's name.
      */
@@ -44,7 +65,7 @@ public class Player
         return this.name;
     }
 	
-	public Card drawCard(Deck deck)
+	public Card draw(Deck deck)
     {
 		Card newCard = deck.pop();
 		this.hand.add(newCard);
