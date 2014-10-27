@@ -1,5 +1,3 @@
-package Crazy8;
-
 import java.util.*;
 
 public class DiscardPile extends LStack<Card>
