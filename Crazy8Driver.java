@@ -1,75 +1,58 @@
-//package Crazy8;
+ 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.IndexOutOfBoundsException;
-import java.util.InputMismatchException;
 import java.util.regex.Pattern;
-
 
 public class Crazy8Driver
 {
     public static final int MAXRM = 3;
     public static final int CHEAT = -2;
+
     public static void main(String[] args)
     {
         /* Here we'll instantiate a cache of of players for the program to choose from later on. There is a better way to declare a bunch of Players
          * in bulk, but right now we'll just do it right here before it gets too large.
          */
         ArrayList<Player> playerCache = Crazy8Driver.populatePlayerCache();
-        //TEST DECK
+        
         /* Establish the player list that will be playing the game. This list draws from playerCache, and calls instantiatePlayers() to fill the list.
          * Uncommented due to testing and fills the list with Gul'dan and Thrall.
          */
         ArrayList<Player> players = new ArrayList<Player>();
-        //players = instantiatePlayers(playerCache);
-        players.add(playerCache.get(1)); players.add(playerCache.get(8)); // --- This line is for debugging
+        players = instantiatePlayers(playerCache);
+        //players.add(playerCache.get(8)); players.add(playerCache.get(4)); // --- This line is for debugging
+        
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
-
         Deck deck = new Deck();
         ArrayList<ArrayList<Card>> hands = Crazy8Driver.dealCards(deck, players.size(), players);
  
         // The current pile of cards we'll be working with will be in the card stack.
-        //LStack<Card> cardStack = new LStack<Card>();
-        DiscardPile cardPile = new DiscardPile();
+        DiscardPile cardStack = new DiscardPile();
         
         // Tell the player what's going on, draw a card, and put it into play.
         System.out.println("You go first.");
-
-        //Card firstCard = deck.pop();
-        cardPile.push(deck.pop());
-        System.out.println("The first card drawn is a(n) " + cardPile.peek());
-        //cardStack.push(firstCard);
-
+        Card firstCard = deck.pop();
+        System.out.println("The first card drawn is a(n) " + firstCard + "\n\n");
+        System.out.println("Enter 'help' for assistance.");
+        cardStack.push(firstCard);
+        
         boolean exitGame = false;
         while(!exitGame)
         {
-            Crazy8Driver.playerTurn(deck, players, cardPile);
-            int playersActive = 0;
-            for(Player p : players)
-            {
-                if(p.isplaying)
-                    playersActive++;
-            }
-            if(playersActive == 1)
-            {
-                exitGame = true;
-                if(players.get(0).isplaying)
-                   System.out.println("Congratulations! You have won!");
-                else
-                   System.out.println("You have lost...");
-            }
             for(int i = 0; i < players.size(); i++)
             {
+                if(i == 0) playerTurn(deck, players, cardStack);
+                else players.get(i).behavior.play(deck, players, cardStack);
                 if(players.get(i).hand.size() == 0)
                 {
+                    System.out.println(players.get(i) + " has emptied their hand!");
+                    System.out.println(players.get(i) + " has won the game!");
+                    i = 444;
                     exitGame = true;
-                    if(i == 0)
-                        System.out.println("Congratulations! You have won!");
-                    else
-                        System.out.println("You have lost...");
                 }
             }
         }
@@ -81,7 +64,6 @@ public class Crazy8Driver
      * @param The list of players (their hands included) we're working with.
      * @param cardStack The growing stack of cards.
      */
-
     private static void playerTurn(Deck deck, ArrayList<Player> playerList, DiscardPile cardStack)
     {
         // So we don't have to repeatedly call playerList.get(0) to refer to the player, let's just make a 
@@ -91,20 +73,11 @@ public class Crazy8Driver
         // The following using the format method of the String class to cleanly print out a spaced out message
         // that displays the top of the stack.
         System.out.println("\n\n\n\n\n\n");
-        String currentSuit = Character.toUpperCase(cardStack.topSuit.charAt(0)) + cardStack.topSuit.substring(1);
+        String currentSuit = Character.toUpperCase(cardStack.peek().suit.charAt(0)) + cardStack.peek().suit.substring(1);
         String outText = String.format("%-20s %-13s %-20s %-20s\n\n", " ", "Top of stack: ", cardStack.peek(), "Current suit: " + currentSuit + "s");
         System.out.println(outText);
         
-        // Here we are scrolling through every card in the player's hand and printing it, using .format() to make sure
-        // everything is spaced correctly.
-        // Note on this format: The specific %-20s merely specifies a left-aligned message of 20 characters in length.
-        //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
-        //  will be filled in with whitespace.
-        String handText = "";
-        System.out.println("Cards left in deck: "+ deck.size+"\n");        player.printHand();
-        
-        handText += "\n\n";
-        System.out.println(handText);
+        player.printHand();
         
         // Now we're going to print out the hand size of every player.
         // Hand size is formatted similarily to the hand above.
@@ -128,15 +101,19 @@ public class Crazy8Driver
         legalWords.add("greeting"); legalWords.add("taunt");
         legalWords.add("forfeit"); legalWords.add("draw");
         legalWords.add("pass"); legalWords.add("discard");
+        legalWords.add("ability"); legalWords.add("hand");
         
         // When we need to decide the audience of the player's emotes, it's useful to store the each players' name in a list
         // so we can easily verify that an enterd name is a valid player.
         ArrayList<String> playerNames = new ArrayList<String>();
         for(Player character : playerList) playerNames.add(character.name);
         
+        int abilityUses = 0;
+        
         Scanner userIn = new Scanner(System.in);
         boolean decisionReached = false;
         String decision = "";
+        int cardsDrawn = 0;
         String errorText = "Invalid input.\n"; // Print this out everytime the user enters bad input.
         // General note when using scanners that take input from System.in:
         //  If you use scanner.hasNext() when that scaner is taking input from System.in, unless it reads en EOF (Ctrl+D),
@@ -154,6 +131,10 @@ public class Crazy8Driver
                     // Call the helpMenu method.
                     Crazy8Driver.helpMenu();
                 }
+                else if(decision.equals("hand"))
+                {
+                    player.printHand();
+                }
                 else if(decision.equals("greeting"))
                 {
                     responseType = "greeting";
@@ -168,18 +149,34 @@ public class Crazy8Driver
                 }
                 else if(decision.equals("draw"))
                 {
-					//Card temp = deck.pop();
-                    //System.out.println(player.toString()+"(You) has drawn "+temp.toString()+".");
-                    //player.hand.add(temp);
-					player.draw(deck);
-					player.printHand();
+                    if(deck.size > 0)
+                    {
+                        Card drawCard = player.draw(deck);
+                        cardsDrawn++;
+                        System.out.println("You drew a " + drawCard);
+                    }
+                    else
+                    {
+                        System.out.println("The deck is empty, no cards drawn.");
+                    }
                 }
                 else if(decision.equals("pass"))
                 {
-                    // Flesh out this mechanic.
-                    decisionReached = true;
+                    if(cardsDrawn >= 3 || deck.size == 0)
+                        decisionReached = true;
+                    else
+                        System.out.println("You can't pass until you've drawn at least three cards.");
                 }
-                else if(decision.equals("discard"))            //Caution: Under Construction
+                else if(decision.equals("ability"))
+                {
+                    if(abilityUses < player.ability.uses())
+                    {
+                        player.ability.use(deck, cardStack, playerList);
+                        abilityUses++;
+                    }
+                    if(player.ability.endTurn()) decisionReached = true;
+                }
+                else if(decision.equals("discard"))
                 {
                     if(!Crazy8Driver.discard(userIn, player, cardStack))
                     {
@@ -290,7 +287,7 @@ public class Crazy8Driver
             disCard = (rmNum.get(i) == CHEAT)? player.hand.get(0) : player.hand.get(rmNum.get(i));
             if(rmNum.get(i) == CHEAT)
             {
-                System.out.println("You're cheating!!! Discarding "+player.hand.get(i).toString());
+                System.out.println("You're cheating! Discarding "+player.hand.get(i).toString());
                 valid[i] = discarded = true;
             }
             else if(rmNum.get(i) >= player.hand.size() || rmNum.get(i) < 0)
@@ -317,7 +314,7 @@ public class Crazy8Driver
                }
                else
                {
-                   System.out.println("Cannot play "+player.hand.get(rmNum.get(i)).toString()+" from your hand. Moving on...");
+                   System.out.println("Cannot play "+player.hand.get(rmNum.get(i)).toString()+" from your hand. Moving on.");
                    valid[i] = false;
                }
             }
@@ -345,7 +342,7 @@ public class Crazy8Driver
         userin.nextLine();
         return discarded;
     }
-
+    
     //discard(...) helper method
     public static String getSuit()
     {
@@ -373,7 +370,7 @@ public class Crazy8Driver
             }
         }
     }
-    
+
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process
      * the dialogue, instead of it all happening at once. Usually, .pacedDialogue() will be followed another call to this method, resembling some
@@ -418,17 +415,18 @@ public class Crazy8Driver
             {
                 System.out.println("\n\nThe premise of Crazy 8s is to empty your hand before your opponents, the first to do so wins. \n"
                                  + "* You may only discard a card when it matches either the rank or suit of the card at the top of the pile. \n"
-                                 + "\t To do this, enter: 'discard' followed by the card you would like to discard in its shorthand form.\n"
-                                 + "\t For example, a 6 of Heart's shorthand would be a 6h. An Ace of diamonds would be Ad.\n"
+                                 + "\t To do this, enter: 'discard' followed by the index of the card you would like to discard as its presented to you\n"
+                                 + "\t For example, to discard the 3rd card from your hand, enter: 'discard' followed by '1'.\n"
                                  + "* You may discard several cards of the same rank, all at once. To do this, follow the input:\n"
-                                 + "\t discard 4c 4d 4h"
-                                 + "\t The shorthands must be seperated by spaces. The last card in the list will be the card at the top of the discard pile.\n"
+                                 + "\t discard 1 2 3 \t Where cards 1, 2, and 3 are cards of equal value."
+                                 + "\t To exit the discard phase, enter any non-integer input. (For example: 'discard 1 2 a' will work.)\n"
                                  + "* You may play an 8 at any time. When an 8 is played, you can change the suit that the other plays must match.\n"
-                                 + "\t If the first card to be discarded from the deck is an 8, any suit may be played.\n"
                                  + "* If you have no possible cards to discard, you must draw from the pile. To do this, enter 'draw.'\n"
                                  + "\t You can draw as many times from the deck as you would like.\n"
                                  + "\t Once you may have drawn at least 3 cards, you may pass your turn.\n"
-                                 + "\t If the deck has been exhausted, and you have no available cards to play, you may also pass your turn.\n");
+                                 + "\t If the deck has been exhausted, and you have no available cards to play, you may also pass your turn.\n"
+                                 + "* And lastly, every character has an ability which they can use to influence the game. To use your character's ability\n"
+                                 + "\t enter 'ability' to use it. Take note, however, that some abilities will end your turn.\n");
             }
             else if(decision.equals("emotes"))
             {
@@ -443,6 +441,7 @@ public class Crazy8Driver
                 System.out.println(String.format("%-10s %-30s", "greeting", "Say a greeting to the AI."));
                 System.out.println(String.format("%-10s %-30s", "taunt", "Taunt the AI."));
                 System.out.println(String.format("%-10s %-30s", "players", "List the players in the current game."));
+                System.out.println(String.format("%-10s %-30s", "ability", "Use your player ability."));
                 System.out.println(String.format("%-10s %-30s", "forfeit", "Forfeit the game."));
             }
             else if(decision.equals("menu")) System.out.println(menuText);
@@ -497,8 +496,8 @@ public class Crazy8Driver
                     while(!kill2)
                     {
                         System.out.println("\n " + playerOfChoice);
-                        System.out.println("Flavor text will go here.");
-                        System.out.println("Maybe some other stuff too?");
+                        System.out.println("Ability: " + playerOfChoice.ability.name());
+                        System.out.println("\n" + playerOfChoice.ability + "\n");
                         System.out.println("Enter 'yes' to select this character, enter 'no' to go back to selection.\n");
                         choiceName = playerChoice.next();
                         if(choiceName.equals("yes")) kill2 = true;
@@ -597,7 +596,7 @@ public class Crazy8Driver
      * @precondition That the deck passed into is greater than the number of players times eight.
      * @postcondition That the deck passed into has decreased in size by a multiple of eight.
      */
-    private static ArrayList<ArrayList<Card>> dealCards(Deck deck, int players, ArrayList<Player> playerList)
+    private static ArrayList<ArrayList<Card>> dealCards(LStack<Card> deck, int players, ArrayList<Player> playerList)
     {
         // Instantiate a list of dealt hands. This list isn't as important as giving these actual hands to player characters
         // but we might need the list of hands for some reason.
@@ -619,8 +618,87 @@ public class Crazy8Driver
         for(int i = 0; i < players; i++) playerList.get(i).hand = hands.get(i);
         return hands;
     }
-
-    //Deck class should have makeDeck()
+    
+    /**
+     * @return A new, randomly filled deck of the four suits, 1 through Ace.
+     */
+    private static LStack<Card> makeDeck()
+    {
+        // First we need to establish the cards we are using. It's easier to just load the cards
+        // into suits, and then randomly pick from within the suits when we're filling the deck.
+        // Here, we're just declaring lists of Cards, and filling them sequentially with 14 cards.
+        LStack<Card> deck = new LStack<Card>();
+        ArrayList<Card> diamonds = new ArrayList<Card>();
+        ArrayList<Card> hearts = new ArrayList<Card>();
+        ArrayList<Card> clubs = new ArrayList<Card>();
+        ArrayList<Card> spades = new ArrayList<Card>();
+        for(int i = 2; i <= 14; i++) diamonds.add(new Card(i, "diamond"));
+        for(int i = 2; i <= 14; i++) hearts.add(new Card(i, "heart"));
+        for(int i = 2; i <= 14; i++) clubs.add(new Card(i, "club"));
+        for(int i = 2; i <= 14; i++) spades.add(new Card(i, "spade"));
+        
+        // Now we need to randomly select from the above suits and add each one to the deck
+        // removing from their suit's list. We do this until all suits are empty.
+        boolean suitsUsed = false; // If all suits are used up, exit the loop.
+        Random ran = new Random();
+        int ranNum = 0; // This determines the random index from the suit list we'll take from.
+        int ranSuit = 0; // This determines the random suit we'll select.
+        // We'll store the suits that are currently empty, so we have a nice collection of empty suits
+        // as they are used up.
+        ArrayList<Integer> emptySuits = new ArrayList<Integer>();
+        while(!suitsUsed)
+        {
+            // Here, we declare which suit we'll be working with -- however, what if we recieve a 
+            // random integer for a matching suit that is EMPTY? The following while loop examines
+            // what we get, and makes sure we only progress until we know we'll be working with a suit
+            // that is not empty.
+            ranSuit = ran.nextInt(4);
+            while(emptySuits.contains(ranSuit)) ranSuit = ran.nextInt(4);
+            
+            // Here, suit will be pointing to one of the non-empty declared suits above. This way,
+            // we don't need to hardcode for each suit, but we can just refer to the suit we're
+            // working with as "suit."
+            ArrayList<Card> suit = new ArrayList<Card>();
+            switch(ranSuit)
+            {
+                case 0:
+                    suit = diamonds;
+                    break;
+                case 1:
+                    suit = hearts;
+                    break;
+                case 2:
+                    suit = clubs;
+                    break;
+                case 3:
+                    suit = spades;
+                    break;
+            }
+            
+            // Currently, if we randomly select an empty suit that hasn't been added to emptySuits,
+            // this is where we'd add that suit to emptySuits. 
+            //
+            // The first else condition is the portion of the method that actually adds a randomly
+            // selected card, and pushes that card into LStack deck. Once we do that, we're then sure
+            // to remove that card from its suit.
+            //
+            // The final else statement flips the kill condition "suitsUsed" once every suit is emptied.
+            if(suit.size() == 0) emptySuits.add(ranSuit);
+            else if(suit.size() != 0)
+            {
+                // We declare ranNum to be a number from 0 to the size of the current suit we're working with.
+                // This size decreases overtime as we remove cards from that particular suit, so in this way,
+                // we can randomly select a card from that decreasing list.
+                ranNum = ran.nextInt(suit.size());
+                deck.push(suit.get(ranNum));
+                suit.remove(ranNum);
+            }
+            if(diamonds.size() == 0 && hearts.size() == 0 && clubs.size() == 0 && spades.size() == 0)
+                suitsUsed = true;
+        }
+        return deck;
+    }
+    
     private static ArrayList<Player> populatePlayerCache()
     {
         ArrayList<Player> playerCache = new ArrayList<Player>();
@@ -634,7 +712,34 @@ public class Crazy8Driver
         playerCache.add(new Player("Garrosh", "Victory or death!", "Heh, greetings.", "I will crush you!"));
         playerCache.add(new Player("Thrall", "Elements guide me!", "Greetings, friend.", "The elements will destroy you!"));
         
-        playerCache.get(8).behavior = new AggressiveBehavior(playerCache.get(8));
+        playerCache.get(8).behavior = new AggressiveFabricate(playerCache.get(8));
+        playerCache.get(8).ability = new FabricateAbility(playerCache.get(8));
+        
+        playerCache.get(7).behavior = new AggressiveCycle(playerCache.get(7));
+        playerCache.get(7).ability = new CycleAbility(playerCache.get(7));
+         
+        playerCache.get(6).behavior = new AggressiveFabricate(playerCache.get(6));
+        playerCache.get(6).ability = new FabricateAbility(playerCache.get(6));
+         
+        playerCache.get(5).behavior = new AggressiveCycle(playerCache.get(5));
+        playerCache.get(5).ability = new CycleAbility(playerCache.get(5));
+         
+        playerCache.get(4).behavior = new AggressiveFabricate(playerCache.get(4));
+        playerCache.get(4).ability = new FabricateAbility(playerCache.get(4));
+         
+        playerCache.get(3).behavior = new AggressiveCycle(playerCache.get(3));
+        playerCache.get(3).ability = new CycleAbility(playerCache.get(3));
+         
+        playerCache.get(2).behavior = new AggressiveFabricate(playerCache.get(2));
+        playerCache.get(2).ability = new FabricateAbility(playerCache.get(2));
+         
+        playerCache.get(1).behavior = new AggressiveCycle(playerCache.get(1));
+        playerCache.get(1).ability = new CycleAbility(playerCache.get(1));
+         
+        playerCache.get(0).behavior = new AggressiveFabricate(playerCache.get(0));
+        playerCache.get(0).ability = new RefreshAbility(playerCache.get(0));
+        
+        
         return playerCache;
     }
 }

@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 public interface Behavior
 {
-    public void play(LStack<Card> deck, ArrayList<Player> playerList, LStack<Card> discardPile);
+    public void play(Deck deck, ArrayList<Player> playerList, DiscardPile discardPile);
 }

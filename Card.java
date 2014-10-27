@@ -1,4 +1,3 @@
-//package Crazy8;
 import java.lang.Comparable;
 import java.util.ArrayList;
 

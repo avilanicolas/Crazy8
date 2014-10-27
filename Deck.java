@@ -1,14 +1,13 @@
-//package Crazy8;
 import java.util.*;
 
 public class Deck extends LStack<Card>
 {
 	/**
-	 * Inherits: push(...), pop(), isEmpty(), get(...), peek(), search(...)
+	  * Inherits: push(...), pop(), isEmpty(), get(...), peek(), search(...)
      * @return A new, randomly filled deck of the four suits, 1 through Ace.
      */
 	public Deck()
-	{
+   {
         // First we need to establish the cards we are using. It's easier to just load the cards
         // into suits, and then randomly pick from within the suits when we're filling the deck.
         // Here, we're just declaring lists of Cards, and filling them sequentially with 14 cards.
@@ -84,6 +83,11 @@ public class Deck extends LStack<Card>
         }
     }
     
+    public Card draw()
+    {
+        return this.pop();
+    }
+    
     public void shuffle()
 	{
 		ArrayList<Card> tempDeck = new ArrayList<Card>();
@@ -100,5 +104,5 @@ public class Deck extends LStack<Card>
 			ranInt = randy.nextInt(tempDeck.size());
 			this.push(tempDeck.remove(ranInt));
 		}
-	}
+	}   
 }

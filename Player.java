@@ -1,5 +1,3 @@
-//package Crazy8;
-
 import java.util.ArrayList;
 
 /**
@@ -18,9 +16,12 @@ public class Player
     /** Their hand of cards. */
     public ArrayList<Card> hand;
     
-    public boolean isplaying;
+    
     /** Manually set the AI behavior when you create this object. */
     public Behavior behavior;
+    
+    public Ability ability;
+    
     /**
      * @param newName Their new name.
      * @param opening Their opening line.
@@ -33,43 +34,57 @@ public class Player
         this.greetingText = greeting;
         this.tauntText = taunt;
         this.openingText = opening;
-        isplaying = true;
-        //this.hand = newHand;
+    }
+    
+    /**
+     * A lazy way to create -somewhat- descriptive dialogue. This method will return a string like:
+     *  Jaina shouted, "My magic will tear you apart!"
+     *  Malfurion lazily mumbled, "This game is crazy."
+     *
+     * @param message       What you want the character to say.
+     * @param description   How you want them to say it.
+     * @return A string in the form: {Character.name} {description} "{message}"
+     */
+    public String say(String message, String description)
+    {
+        String dialogue = this.name + " " + description + " \"" + message + "\"";
+        return dialogue;
     }
     
     public Player() {}
+    
     /**
       *  Print the player's hand in a list from 1-8.
       *
       */
     public void printHand()
     {
-       for(int i = 0; i < hand.size(); i++)
-       {
-           System.out.println((i+1)+". "+hand.get(i).toString());
-       }
-       System.out.printf("\n");
+        // Here we are scrolling through every card in the player's hand and printing it, using .format() to make sure
+        // everything is spaced correctly.
+        // Note on this format: The specific %-20s merely specifies a left-aligned message of 20 characters in length.
+        //  So if the string we're passing in place of that argument is not 20 characters in length, the rest of the space
+        //  will be filled in with whitespace.
+        String handText = "";
+        for(Card card : this.hand)
+        {
+            int cardIndex = this.hand.indexOf(card) + 1;
+            handText += String.format("%-3s %-25s", cardIndex + ")", card);
+            // Make every row 4 cards in length, for less wide displays.
+            if(((this.hand.indexOf(card) + 1) % 4) == 0) handText += "\n";
+        }
+        handText += "\n\n";
+        System.out.println(handText);
     }
     
-    /**
-	public void draw(Deck deck)
+    public Card draw(Deck deck)
     {
-        hand.add(deck.pop());
-    }
-	*/
-    /**
-     * @return This player's name.
-     */
+        Card drawCard = deck.pop();
+        hand.add(drawCard);
+        return drawCard;
+    }    
+    
     public String toString()
     {
         return this.name;
-    }
-	
-	public Card draw(Deck deck)
-    {
-		Card newCard = deck.pop();
-		this.hand.add(newCard);
-		System.out.println(this.name +" drew a "+ newCard.toString() +"!");
-		return newCard;
     }
 }
