@@ -20,7 +20,7 @@ public class AggressiveCycle implements Behavior
      * @param playerList The list of playrs we're playing with.
      * @param discardPile The growing discardPile in the game.
      */
-    public void play(LStack<Card> deck, ArrayList<Player> playerList, LStack<Card> discardPile)
+    public void play(Deck deck, ArrayList<Player> playerList, DiscardPile discardPile)
     {
         ArrayList<Card> hand = owner.hand;
         Card topCard = discardPile.peek();
@@ -52,6 +52,7 @@ public class AggressiveCycle implements Behavior
         // DecisonReached will be set to 'true' as soon as any card is played.
         boolean decisionReached = false;
         boolean cardDrawn = false;
+        int cardsDrawn = 0;
         while(!decisionReached)
         {
             // Check the active suit, this will be changed later.
@@ -120,12 +121,14 @@ public class AggressiveCycle implements Behavior
                     owner.hand.add(drawCard);
                     System.out.println(owner + " drew a card.");
                     cardDrawn = true;
+                    cardsDrawn++;
                 }
                 else if(cardDrawn)
                 {
                     owner.ability.use(deck, discardPile, playerList);
                     decisionReached = true;
                 }
+                else if(cardsDrawn == 3) decisionReached = true;
             }
         }
     }

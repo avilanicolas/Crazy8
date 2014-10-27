@@ -20,7 +20,7 @@ public class AggressiveFabricate implements Behavior
      * @param playerList The list of playrs we're playing with.
      * @param discardPile The growing discardPile in the game.
      */
-    public void play(LStack<Card> deck, ArrayList<Player> playerList, LStack<Card> discardPile)
+    public void play(Deck deck, ArrayList<Player> playerList, DiscardPile discardPile)
     {
         ArrayList<Card> hand = owner.hand;
         Card topCard = discardPile.peek();
@@ -52,6 +52,7 @@ public class AggressiveFabricate implements Behavior
         // DecisonReached will be set to 'true' as soon as any card is played.
         boolean decisionReached = false;
         boolean cardDrawn = false;
+        int cardsDrawn = 0;
         int abilityUsed = 0;
         while(!decisionReached)
         {
@@ -119,13 +120,18 @@ public class AggressiveFabricate implements Behavior
                     owner.ability.use(deck, discardPile, playerList);
                     abilityUsed += 1;
                 }
-                else
+                else if(cardsDrawn < 3)
                 {
                     // We can't play a single card, so draw.
                     Card drawCard = deck.pop();
                     owner.hand.add(drawCard);
                     System.out.println(owner + " drew a card.");
                     cardDrawn = true;
+                    cardsDrawn++;
+                }
+                else
+                {
+                    decisionReached = true;
                 }
             }
         }

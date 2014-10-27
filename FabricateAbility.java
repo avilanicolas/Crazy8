@@ -18,7 +18,11 @@ public class FabricateAbility implements Ability
     
     public int uses() { return 1; }
     
-    public void use(LStack<Card> deck, LStack<Card> discardPile, ArrayList<Player> players)
+    public String name() { return this.name; }
+    
+    public boolean endTurn() { return false; }
+    
+    public void use(Deck deck, DiscardPile discardPile, ArrayList<Player> players)
     {
         Random randomIndexGenerator = new Random();
         int randomSuitNum = randomIndexGenerator.nextInt(4);
