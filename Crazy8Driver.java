@@ -168,10 +168,11 @@ public class Crazy8Driver
                 }
                 else if(decision.equals("draw"))
                 {
-                    Card temp = deck.pop();
-                    System.out.println(player.toString()+"(You) has drawn "+temp.toString()+".");
-                    player.hand.add(temp);
-                    player.printHand();
+					//Card temp = deck.pop();
+                    //System.out.println(player.toString()+"(You) has drawn "+temp.toString()+".");
+                    //player.hand.add(temp);
+					player.draw(deck);
+					player.printHand();
                 }
                 else if(decision.equals("pass"))
                 {
@@ -372,15 +373,6 @@ public class Crazy8Driver
             }
         }
     }
-	/**
-    private static Card drawCard(Player player, Deck deck)
-    {
-		Card newCard = deck.pop();
-		player.hand.add(newCard);
-		System.out.println(player.name +" drew a "+ newCard +"!");
-		return newCard;
-    }
-    */
     
     /**
      * pacedDialogue is a method we use that enters input and then tells the computer to wait. This makes it so that the player can notice and process

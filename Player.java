@@ -69,7 +69,7 @@ public class Player
     {
 		Card newCard = deck.pop();
 		this.hand.add(newCard);
-		System.out.println(this.name +" drew a "+ newCard +"!");
+		System.out.println(this.name +" drew a "+ newCard.toString() +"!");
 		return newCard;
     }
 }

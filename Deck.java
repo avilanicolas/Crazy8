@@ -8,7 +8,7 @@ public class Deck extends LStack<Card>
      * @return A new, randomly filled deck of the four suits, 1 through Ace.
      */
 	public Deck()
-   {
+	{
         // First we need to establish the cards we are using. It's easier to just load the cards
         // into suits, and then randomly pick from within the suits when we're filling the deck.
         // Here, we're just declaring lists of Cards, and filling them sequentially with 14 cards.
