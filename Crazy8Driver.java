@@ -121,6 +121,7 @@ public class Crazy8Driver
         //  .hasNext() will ALWAYS return true, because the input stream from System hasn't ended.
         while(!decisionReached)
         {
+            CrazyEightGUI gui = new CrazyEightGUI(cardStack.peek(), playerList.get(0));
             // responseType is used to determine if the user is sending an emote, and if they are, to make sure
             // that the AI responds appropriately.
             String responseType = "none";

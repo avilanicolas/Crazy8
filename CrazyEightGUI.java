@@ -68,7 +68,7 @@ public class CrazyEightGUI extends JFrame
          System.out.println("Trying to load "+toLoad+".");
          try
          {
-            File image = new File("Cards/"+toLoad+".png");
+            File image = new File("./Cards/"+toLoad+".png");
             BufferedImage bi = ImageIO.read(image);
             cardSprites[suit][val] = bi;
          }
@@ -105,8 +105,8 @@ public class CrazyEightGUI extends JFrame
       }
       try
       {
-         bim = ImageIO.read(new File("Cards/Card-Back.png"));
-         dis = ImageIO.read(new File("Cards/"+graphix+".png"));
+         bim = ImageIO.read(new File("./Cards/Card-Back.png"));
+         dis = ImageIO.read(new File("./Cards/"+graphix+".png"));
       }
       catch(IOException e)
       {
@@ -144,7 +144,7 @@ public class CrazyEightGUI extends JFrame
             {
                st += c.value;
             }
-            BufferedImage bfim = ImageIO.read(new File("Cards/"+st+".png"));
+            BufferedImage bfim = ImageIO.read(new File("./Cards/"+st+".png"));
             g.drawImage(bfim,xpos,ypos,w,h,null);
          }
          catch(Exception e)
@@ -206,7 +206,7 @@ public class CrazyEightGUI extends JFrame
             {
                st += c.value;
             }
-            BufferedImage bfim = ImageIO.read(new File("Cards/"+st+".png"));
+            BufferedImage bfim = ImageIO.read(new File("./Cards/"+st+".png"));
             g.drawImage(bfim,xpos,ypos,w,h,null);
          }
          catch(Exception e)
@@ -238,8 +238,8 @@ public class CrazyEightGUI extends JFrame
       }
       try
       {
-         bim = ImageIO.read(new File("Cards/Card-Back.png"));
-         dis = ImageIO.read(new File("Cards/"+graphix+".png"));
+         bim = ImageIO.read(new File("./Cards/Card-Back.png"));
+         dis = ImageIO.read(new File("./Cards/"+graphix+".png"));
       }
       catch(IOException e)
       {
