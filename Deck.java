@@ -1,3 +1,5 @@
+package Crazy8;
+
 import java.util.*;
 
 public class Deck extends LStack<Card>

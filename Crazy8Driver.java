@@ -1,4 +1,5 @@
- 
+package Crazy8;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;

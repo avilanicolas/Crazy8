@@ -1,3 +1,5 @@
+package Crazy8;
+
 import java.util.ArrayList;
 
 /**
