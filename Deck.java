@@ -1,4 +1,4 @@
-package Crazy8;
+ 
 
 import java.util.*;
 
@@ -18,10 +18,10 @@ public class Deck extends LStack<Card>
         ArrayList<Card> hearts = new ArrayList<Card>();
         ArrayList<Card> clubs = new ArrayList<Card>();
         ArrayList<Card> spades = new ArrayList<Card>();
-        for(int i = 2; i <= 14; i++) diamonds.add(new Card(i, "diamond"));
-        for(int i = 2; i <= 14; i++) hearts.add(new Card(i, "heart"));
-        for(int i = 2; i <= 14; i++) clubs.add(new Card(i, "club"));
-        for(int i = 2; i <= 14; i++) spades.add(new Card(i, "spade"));
+        for(int i = 1; i <= 13; i++) diamonds.add(new Card(i, "diamond"));
+        for(int i = 1; i <= 13; i++) hearts.add(new Card(i, "heart"));
+        for(int i = 1; i <= 13; i++) clubs.add(new Card(i, "club"));
+        for(int i = 1; i <= 13; i++) spades.add(new Card(i, "spade"));
         
         // Now we need to randomly select from the above suits and add each one to the deck
         // removing from their suit's list. We do this until all suits are empty.

@@ -1,6 +1,3 @@
-package Crazy8;
-
-//Cards have 2 extra "pixels" empty on the side
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
@@ -12,6 +9,7 @@ public class CrazyEightGUI extends JFrame
 {
    private static JPanel panel;
    private static BufferedImage[][] cardSprites;
+   private static BufferedImage back;
    private Player play;
    private Card top;
    public CrazyEightGUI(Card discard, Player player)
@@ -68,7 +66,7 @@ public class CrazyEightGUI extends JFrame
          System.out.println("Trying to load "+toLoad+".");
          try
          {
-            File image = new File("Cards/"+toLoad+".png");
+            File image = new File("./Cards/"+toLoad+".png");
             BufferedImage bi = ImageIO.read(image);
             cardSprites[suit][val] = bi;
          }
@@ -105,8 +103,9 @@ public class CrazyEightGUI extends JFrame
       }
       try
       {
-         bim = ImageIO.read(new File("Cards/Card-Back.png"));
-         dis = ImageIO.read(new File("Cards/"+graphix+".png"));
+         bim = ImageIO.read(new File("./Cards/Card-Back.png"));
+         back = bim;
+         dis = ImageIO.read(new File("./Cards/"+graphix+".png"));
       }
       catch(IOException e)
       {
@@ -144,7 +143,7 @@ public class CrazyEightGUI extends JFrame
             {
                st += c.value;
             }
-            BufferedImage bfim = ImageIO.read(new File("Cards/"+st+".png"));
+            BufferedImage bfim = ImageIO.read(new File("./Cards/"+st+".png"));
             g.drawImage(bfim,xpos,ypos,w,h,null);
          }
          catch(Exception e)
@@ -195,24 +194,24 @@ public class CrazyEightGUI extends JFrame
       }
       for(Card c: playerHand)
       {
-         try
-         {
+         /*try
+         {*/
             String st = c.suit.substring(0,1).toLowerCase();
-            if(c.value < 10)
+            /*if(c.value < 10)
             {
                st += "0"+c.value;
             }
             else
             {
                st += c.value;
-            }
-            BufferedImage bfim = ImageIO.read(new File("Cards/"+st+".png"));
+            }*/
+            BufferedImage bfim = cardSprites[suitToInt(st)][c.value];//ImageIO.read(new File("./Cards/"+st+".png"));
             g.drawImage(bfim,xpos,ypos,w,h,null);
-         }
+         /*}
          catch(Exception e)
          {
             System.out.println("Issues adding cards to hand");
-         }
+         }*/
          xpos += cardDist;
       }
    }
@@ -223,11 +222,11 @@ public class CrazyEightGUI extends JFrame
    public void drawPiles(Card c)
    {
       Graphics g = panel.getGraphics();
-      BufferedImage bim = null;
-      BufferedImage dis = null;
-      int disVal = c.value;
+      BufferedImage bim = back; //null
       String disSuit = c.suit.substring(0,1).toLowerCase();
-      String graphix = disSuit;
+      BufferedImage dis = cardSprites[suitToInt(disSuit)][c.value]; //null
+      //int disVal = c.value;
+      /*String graphix = disSuit;
       if(disVal < 10)
       {
          graphix += "0"+disVal;
@@ -237,17 +236,27 @@ public class CrazyEightGUI extends JFrame
          graphix += disVal;
       }
       try
-      {
-         bim = ImageIO.read(new File("Cards/Card-Back.png"));
-         dis = ImageIO.read(new File("Cards/"+graphix+".png"));
-      }
+      {*/
+         //bim = ImageIO.read(new File("./Cards/Card-Back.png"));
+         //dis = ImageIO.read(new File("./Cards/"+graphix+".png"));
+      /*}
       catch(IOException e)
       {
          System.out.println("Card back could not be loaded.");
-      }
+      }*/
       int height = 180;
       g.drawImage(bim,360,170,(int)(height*.7225),height,null);
       g.drawImage(dis,510,170,(int)(height*.7225),height,null);
+   }
+   public int suitToInt(String s)
+   {
+      switch(s){
+         case "c": return 0;
+         case "d": return 1;
+         case "h": return 2;
+         case "s": return 3;
+         default: return 0;
+      }
    }
    public void paint(Graphics g)
    {

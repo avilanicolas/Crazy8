@@ -1,4 +1,4 @@
-package Crazy8;
+package Crazy8; 
 
 import java.lang.Comparable;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class Card
         if(this.value == 11) faceCardType = "J";
         else if(this.value == 12) faceCardType = "Q";
         else if(this.value == 13) faceCardType = "K";
-        else if(this.value == 14) faceCardType = "A";
+        else if(this.value == 1) faceCardType = "A";
         else faceCardType += newValue;
         // The final character in the shorthand is the first character in the suit.
         this.shortText = faceCardType + newSuit.charAt(0);
@@ -54,7 +54,7 @@ public class Card
         if(this.value == 11) retText = "Jack";
         else if(this.value == 12) retText = "Queen";
         else if(this.value == 13) retText = "King";
-        else if(this.value == 14) retText = "Ace";
+        else if(this.value == 1) retText = "Ace";
         else  retText = "" + this.value;
         retText += " of " + printSuit + "s (" + this.shortText + ")";
         return retText;

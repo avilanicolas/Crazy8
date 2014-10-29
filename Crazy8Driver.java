@@ -1,5 +1,4 @@
-//package Crazy8;
-
+package Crazy8;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,6 +9,7 @@ public class Crazy8Driver
 {
     public static final int MAXRM = 3;
     public static final int CHEAT = -2;
+    public static CrazyEightGUI gui;
 
     public static void main(String[] args)
     {
@@ -33,17 +33,22 @@ public class Crazy8Driver
  
         // The current pile of cards we'll be working with will be in the card stack.
         DiscardPile cardStack = new DiscardPile();
+        Card firstCard = deck.pop();
+        cardStack.push(firstCard);
+        
+        //Initiates GUI
+        gui = new CrazyEightGUI(cardStack.peek(), players.get(0));
         
         // Tell the player what's going on, draw a card, and put it into play.
         System.out.println("You go first.");
-        Card firstCard = deck.pop();
+        
         System.out.println("The first card drawn is a(n) " + firstCard + "\n\n");
         System.out.println("Enter 'help' for assistance.");
-        cardStack.push(firstCard);
         
         boolean exitGame = false;
         while(!exitGame)
         {
+            gui.update(players,cardStack.peek());
             for(int i = 0; i < players.size(); i++)
             {
                 if(i == 0) playerTurn(deck, players, cardStack);
@@ -52,7 +57,7 @@ public class Crazy8Driver
                 {
                     System.out.println(players.get(i) + " has emptied their hand!");
                     System.out.println(players.get(i) + " has won the game!");
-                    i = 444;
+                    i = 4;
                     exitGame = true;
                 }
             }
@@ -123,6 +128,7 @@ public class Crazy8Driver
         {
             // responseType is used to determine if the user is sending an emote, and if they are, to make sure
             // that the AI responds appropriately.
+            gui.update(playerList,cardStack.peek());
             String responseType = "none";
             decision = userIn.next();
             if(legalWords.contains(decision))
