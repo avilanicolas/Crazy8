@@ -1,4 +1,4 @@
-package Crazy8;
+//package Crazy8;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -73,11 +73,11 @@ public class Crazy8Driver
         
         // The following using the format method of the String class to cleanly print out a spaced out message
         // that displays the top of the stack.
-        System.out.println("\n\n\n\n\n\n");
+        System.out.println("\n\n\n\n");
         String currentSuit = Character.toUpperCase(cardStack.peek().suit.charAt(0)) + cardStack.peek().suit.substring(1);
         String outText = String.format("%-20s %-13s %-20s %-20s\n\n", " ", "Top of stack: ", cardStack.peek(), "Current suit: " + currentSuit + "s");
         System.out.println(outText);
-        
+        System.out.println("Cards left in deck: "+ deck.size);
         player.printHand();
         
         // Now we're going to print out the hand size of every player.
@@ -185,7 +185,7 @@ public class Crazy8Driver
                     }
                     else
                     {
-                        System.out.println("Ending turn.");
+                        System.out.println("Ending turn.\n");
                         decisionReached = true;
                     }
                 }
@@ -257,6 +257,7 @@ public class Crazy8Driver
         boolean[] valid = {false,false,false};           //Store validity of cards
         ArrayList<Integer> rmNum = new ArrayList<>();    //Indexes that will be removed from hand.
         int cardsRemoved = 0, j = 0, count = 0, chosenCard = -1;
+        int maxIndex = player.hand.size();
         String currentSuit = "";
         Card disCard = new Card(0,"A");
 
@@ -268,17 +269,27 @@ public class Crazy8Driver
         {
             if(userin.hasNextInt() && count < MAXRM)
             {
-               rmNum.add(userin.nextInt()-1);
-               count++;
+               chosenCard = userin.nextInt();
+               //System.out.printf("Chosen index: %d\n", chosenCard);
+               if(chosenCard > -1 && chosenCard <= player.hand.size()-count)
+               {
+                  rmNum.add(chosenCard-1);
+                  count++;
+               }
+               else
+               {
+                  System.out.println("That is an invalid card number.");
+                  chosenCard = 0;
+               }
             }
             else
             {
-               System.out.println("Ending 'discard' input...");
+               System.out.println();
                break;
             }
         }
         
-        /* 
+        /*
          * This section responds to the input indexes and sets the validity of the cards in
          * 'valid' array.
          * CHEAT = -2, and it auto-plays the first card in your hand.
