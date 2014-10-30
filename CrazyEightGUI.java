@@ -146,6 +146,7 @@ public class CrazyEightGUI extends JFrame
     */
    public void update(ArrayList<Player> players, Card top)
    {
+      super.paint(this.getContentPane().getGraphics());
       panel.repaint();
       drawCards(players.get(0));
       drawPiles(top);
@@ -156,6 +157,7 @@ public class CrazyEightGUI extends JFrame
     */
    public void drawCards(Player p)
    {
+      play = p;
       Graphics g = panel.getGraphics();
       ArrayList<Card> playerHand = p.hand;
       int num = playerHand.size();
@@ -192,6 +194,7 @@ public class CrazyEightGUI extends JFrame
     */
    public void drawPiles(Card c)
    {
+      top = c;
       Graphics g = panel.getGraphics();
       BufferedImage bim = back;
       String disSuit = c.suit.substring(0,1).toLowerCase();

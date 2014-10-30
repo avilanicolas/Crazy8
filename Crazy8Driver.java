@@ -1,4 +1,3 @@
-package Crazy8;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -24,7 +23,6 @@ public class Crazy8Driver
         ArrayList<Player> players = new ArrayList<Player>();
         players = instantiatePlayers(playerCache);
         //players.add(playerCache.get(8)); players.add(playerCache.get(4)); // --- This line is for debugging
-        
         
         // Let's make our new, randomly shuffled deck, using makeDeck().
         // Let's also deal cards from this deck into player hands.
@@ -62,6 +60,7 @@ public class Crazy8Driver
                 }
             }
         }
+        gui.update(players,cardStack.peek());
     }
     
     /**
