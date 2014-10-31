@@ -144,12 +144,11 @@ public class CrazyEightGUI extends JFrame
     * @param players the list of Players who are in the game
     * @param top the top of the discard pile
     */
-   public void update(ArrayList<Player> players, Card top)
+   public void update(ArrayList<Player> players, Card topCard)
    {
-      super.paint(this.getContentPane().getGraphics());
-      panel.repaint();
-      drawCards(players.get(0));
-      drawPiles(top);
+      top = topCard;
+      play = players.get(0);
+      paint(this.getContentPane().getGraphics());
    }
    /**
     * Draws the cards onto the JFrame.
