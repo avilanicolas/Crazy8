@@ -131,12 +131,21 @@ public class CrazyEightGUI extends JFrame
       {
          xpos -= (w/2)*num;
       }
+      int xtra = 1000 - (cardDist*(num-1)+w);
       for(Card c: playerHand)
       {
          String st = c.suit.substring(0,1).toLowerCase();
          BufferedImage bfim = cardSprites[suitToInt(st)][c.value];
          g.drawImage(bfim,xpos,ypos,w,h,null);
-         xpos += cardDist;
+         if(xtra > 0)
+         {
+            xpos += cardDist + 1;
+            xtra--;
+         }
+         else
+         {
+            xpos += cardDist;
+         }
       }
    }
    /**
@@ -179,12 +188,21 @@ public class CrazyEightGUI extends JFrame
       {
          xpos -= (w/2)*num;
       }
+      int xtra = 1000 - (cardDist*(num-1)+w);
       for(Card c: playerHand)
       {
          String st = c.suit.substring(0,1).toLowerCase();
          BufferedImage bfim = cardSprites[suitToInt(st)][c.value];
          g.drawImage(bfim,xpos,ypos,w,h,null);
-         xpos += cardDist;
+         if(xtra > 0)
+         {
+            xpos += cardDist + 1;
+            xtra--;
+         }
+         else
+         {
+            xpos += cardDist;
+         }
       }
    }
    /**
