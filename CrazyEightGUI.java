@@ -15,7 +15,6 @@ public class CrazyEightGUI extends JFrame
    public CrazyEightGUI(Card discard, ArrayList<Player> player)
    {
       super("Crazy 8");
-      System.out.println("Num in the list: "+player.size());
       panel = new JPanel();
       top = discard;
       play = player;
@@ -23,7 +22,6 @@ public class CrazyEightGUI extends JFrame
       setSize(1000,900);
       setResizable(false);
       add(panel);
-      setBackground(Color.GREEN);
       panel.setBackground(Color.GREEN);
       cardSprites = new BufferedImage[4][14];
       boolean loading = true;
@@ -133,7 +131,7 @@ public class CrazyEightGUI extends JFrame
       int cardDist = w;
       if(1000 < (num*(w-4)) && num > 1)
       {
-         xpos = 0;
+         xpos = 2;
          int extraPix = 1000-((cardDist*(num-1))+w);
          if(extraPix > 0)
          {
@@ -176,6 +174,7 @@ public class CrazyEightGUI extends JFrame
          fillMid(2);
          fillRight(3);
       }
+      g.dispose();
    }
    //g.fillRect(0,200,120,400);
    public void fillLeft(int index)
@@ -183,7 +182,7 @@ public class CrazyEightGUI extends JFrame
       Graphics g = panel.getGraphics();
       ArrayList<Card> playerHand = play.get(index).hand;
       int num = playerHand.size();
-      int xpos = 0;
+      int xpos = 2;
       int h = 120;
       int w = (int)(h * (1/.7225));
       int ypos = 400;
@@ -216,6 +215,7 @@ public class CrazyEightGUI extends JFrame
             ypos += cardDist;
          }
       }
+      g.dispose();
    }
    //g.fillRect(880,200,120,400);
    public void fillRight(int index)
@@ -225,7 +225,7 @@ public class CrazyEightGUI extends JFrame
       int num = playerHand.size();
       int h = 120;
       int w = (int)(h * (1/.7225));
-      int xpos = 1000 - w;
+      int xpos = 1000 - w-2;
       int ypos = 400;
       int cardDist = h;
       if(400 < (num*(h-4)) && num > 1)
@@ -256,6 +256,7 @@ public class CrazyEightGUI extends JFrame
             ypos += cardDist;
          }
       }
+      g.dispose();
    }
    public void fillMid(int index)
    {
@@ -295,6 +296,7 @@ public class CrazyEightGUI extends JFrame
             xpos += cardDist;
          }
       }
+      g.dispose();
    }
    /**
     * Updates the piles on the GUI
@@ -310,6 +312,7 @@ public class CrazyEightGUI extends JFrame
       int height = 180;
       g.drawImage(bim,360,270,(int)(height*.7225),height,null);
       g.drawImage(dis,510,270,(int)(height*.7225),height,null);
+      g.dispose();
    }
    public int suitToInt(String s)
    {
@@ -324,7 +327,9 @@ public class CrazyEightGUI extends JFrame
    public void paint(Graphics g)
    {
       super.paint(g);
-      panel.repaint();
+      Graphics x = panel.getGraphics();
+      x.setColor(Color.GREEN);
+      x.fillRect(0,0,panel.getWidth(),panel.getHeight());
       drawCards(play);
       drawPiles(top);
    }
