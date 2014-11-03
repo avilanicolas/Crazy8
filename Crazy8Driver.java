@@ -49,8 +49,16 @@ public class Crazy8Driver
             gui.update(players,cardStack.peek());
             for(int i = 0; i < players.size(); i++)
             {
-                if(i == 0) playerTurn(deck, players, cardStack);
-                else players.get(i).behavior.play(deck, players, cardStack);
+                if(i == 0) 
+                {
+                    playerTurn(deck, players, cardStack);
+                }
+                else
+                {
+                    players.get(i).behavior.play(deck, players, cardStack);
+                }
+                Crazy8Driver.pacedDialogue("", new Player());
+                gui.update(players,cardStack.peek()); 
                 if(players.get(i).hand.size() == 0)
                 {
                     System.out.println(players.get(i) + " has emptied their hand!");
@@ -59,6 +67,7 @@ public class Crazy8Driver
                     exitGame = true;
                 }
             }
+            Crazy8Driver.pacedDialogue("", new Player());
         }
         gui.update(players,cardStack.peek());
     }
@@ -104,7 +113,7 @@ public class Crazy8Driver
         ArrayList<String> legalWords = new ArrayList<String>();
         legalWords.add("help"); legalWords.add("rules");
         legalWords.add("greeting"); legalWords.add("taunt");
-        legalWords.add("forfeit"); legalWords.add("draw");
+        legalWords.add("look"); legalWords.add("draw");
         legalWords.add("pass"); legalWords.add("discard");
         legalWords.add("ability"); legalWords.add("hand");
         
@@ -149,9 +158,29 @@ public class Crazy8Driver
                 {
                     responseType = "taunt";
                 }
-                else if(decision.equals("forfeit"))
+                else if(decision.equals("look"))
                 {
-                    decisionReached = true;
+                    // The following using the format method of the String class to cleanly print out a spaced out message
+                    // that displays the top of the stack.
+                    System.out.println("\n\n\n\n");
+                    currentSuit = Character.toUpperCase(cardStack.peek().suit.charAt(0)) + cardStack.peek().suit.substring(1);
+                    outText = String.format("%-20s %-13s %-20s %-20s\n\n", " ", "Top of stack: ", cardStack.peek(), "Current suit: " + currentSuit + "s");
+                    System.out.println(outText);
+                    System.out.println("Cards left in deck: "+ deck.size);
+                    player.printHand();
+        
+                    // Now we're going to print out the hand size of every player.
+                    // Hand size is formatted similarily to the hand above.
+                    cardCountText = "";
+                    isYou = " (You)"; // Print this first, and reset it. Will only display on the first iteration, which is the player.
+                    for (Player current : playerList)
+                    {
+                        String handCount = "Number of Cards: " + current.hand.size();
+                        cardCountText += String.format("%-15s    %-10s %-5s", current.name + isYou, handCount, " ");
+                        if((playerList.indexOf(current) + 1) % 2 == 0 && current != player) cardCountText += "\n"; // Print a new line for every two players.
+                        isYou = "";
+                    }
+                    System.out.println(cardCountText);
                 }
                 else if(decision.equals("draw"))
                 {
@@ -397,7 +426,7 @@ public class Crazy8Driver
      */
     private static void pacedDialogue(String dialogue, Player character)
     {
-        System.out.print(character + ": " + dialogue + "\n\n");
+        if(!dialogue.equals("")) System.out.print(character + ": " + dialogue + "\n\n");
         try 
         {
             Thread.sleep(1000);
@@ -459,7 +488,7 @@ public class Crazy8Driver
                 System.out.println(String.format("%-10s %-30s", "taunt", "Taunt the AI."));
                 System.out.println(String.format("%-10s %-30s", "players", "List the players in the current game."));
                 System.out.println(String.format("%-10s %-30s", "ability", "Use your player ability."));
-                System.out.println(String.format("%-10s %-30s", "forfeit", "Forfeit the game."));
+                System.out.println(String.format("%-10s %-30s", "look", "Reprint your hand and the state of the game."));
             }
             else if(decision.equals("menu")) System.out.println(menuText);
         }
@@ -736,7 +765,7 @@ public class Crazy8Driver
         playerCache.get(7).ability = new CycleAbility(playerCache.get(7));
          
         playerCache.get(6).behavior = new AggressiveFabricate(playerCache.get(6));
-        playerCache.get(6).ability = new FabricateAbility(playerCache.get(6));
+        playerCache.get(6).ability = new RefreshAbility(playerCache.get(6));
          
         playerCache.get(5).behavior = new AggressiveCycle(playerCache.get(5));
         playerCache.get(5).ability = new CycleAbility(playerCache.get(5));
@@ -744,8 +773,8 @@ public class Crazy8Driver
         playerCache.get(4).behavior = new AggressiveFabricate(playerCache.get(4));
         playerCache.get(4).ability = new FabricateAbility(playerCache.get(4));
          
-        playerCache.get(3).behavior = new AggressiveCycle(playerCache.get(3));
-        playerCache.get(3).ability = new CycleAbility(playerCache.get(3));
+        playerCache.get(3).behavior = new AggressiveFabricate(playerCache.get(3));
+        playerCache.get(3).ability = new RefreshAbility(playerCache.get(3));
          
         playerCache.get(2).behavior = new AggressiveFabricate(playerCache.get(2));
         playerCache.get(2).ability = new FabricateAbility(playerCache.get(2));

@@ -1,4 +1,4 @@
-package Crazy8;
+ 
 
  
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class AggressiveFabricate implements Behavior
                     owner.ability.use(deck, discardPile, playerList);
                     abilityUsed += 1;
                 }
-                else if(cardsDrawn < 3)
+                else if(cardsDrawn < 3 && !deck.isEmpty())
                 {
                     // We can't play a single card, so draw.
                     Card drawCard = deck.pop();
@@ -131,7 +131,7 @@ public class AggressiveFabricate implements Behavior
                     cardDrawn = true;
                     cardsDrawn++;
                 }
-                else
+                else if(deck.isEmpty())
                 {
                     decisionReached = true;
                 }

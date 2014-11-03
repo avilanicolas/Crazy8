@@ -1,4 +1,4 @@
-package Crazy8;
+ 
 
  
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class AggressiveCycle implements Behavior
                     System.out.println(owner + " played a " + playableCardsBySuit.get(0));
                     decisionReached = true;
                 }
-                else if(!cardDrawn)
+                else if(!cardDrawn && !deck.isEmpty())
                 {
                     // We can't play a single card, so draw.
                     Card drawCard = deck.pop();
@@ -130,7 +130,7 @@ public class AggressiveCycle implements Behavior
                     owner.ability.use(deck, discardPile, playerList);
                     decisionReached = true;
                 }
-                else if(cardsDrawn == 3) decisionReached = true;
+                else if(cardsDrawn == 3 || deck.isEmpty()) decisionReached = true;
             }
         }
     }
