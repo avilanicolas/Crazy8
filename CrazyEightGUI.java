@@ -62,7 +62,7 @@ public class CrazyEightGUI extends JFrame
             v = ""+val;
          }
          String toLoad = s+v;
-         System.out.println("Trying to load "+toLoad+".");
+         //System.out.println("Trying to load "+toLoad+".");
          try
          {
             File image = new File("./Cards/"+toLoad+".png");
@@ -180,6 +180,10 @@ public class CrazyEightGUI extends JFrame
    public void fillLeft(int index)
    {
       Graphics g = panel.getGraphics();
+      //Print text at x = 2 y = 370
+      g.setColor(Color.BLACK);
+      g.setFont(new Font(g.getFont().getName(),g.getFont().getStyle(),30));
+      g.drawString(play.get(index).name,20,170);
       ArrayList<Card> playerHand = play.get(index).hand;
       int num = playerHand.size();
       int xpos = 2;
@@ -221,6 +225,9 @@ public class CrazyEightGUI extends JFrame
    public void fillRight(int index)
    {
       Graphics g = panel.getGraphics();
+      g.setColor(Color.BLACK);
+      g.setFont(new Font(g.getFont().getName(),g.getFont().getStyle(),30));
+      g.drawString(play.get(index).name,850,170);
       ArrayList<Card> playerHand = play.get(index).hand;
       int num = playerHand.size();
       int h = 120;
@@ -261,6 +268,9 @@ public class CrazyEightGUI extends JFrame
    public void fillMid(int index)
    {
       Graphics g = panel.getGraphics();
+      g.setColor(Color.BLACK);
+      g.setFont(new Font(g.getFont().getName(),g.getFont().getStyle(),30));
+      g.drawString(play.get(index).name,450,180);
       ArrayList<Card> playerHand = play.get(index).hand;
       int num = playerHand.size();
       int xpos = 500;
