@@ -35,7 +35,7 @@ public class Crazy8Driver
         cardStack.push(firstCard);
         
         //Initiates GUI
-        gui = new CrazyEightGUI(cardStack.peek(), players.get(0));
+        gui = new CrazyEightGUI(cardStack.peek(), players);
         
         // Tell the player what's going on, draw a card, and put it into play.
         System.out.println("You go first.");

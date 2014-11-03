@@ -9,17 +9,18 @@ public class CrazyEightGUI extends JFrame
 {
    private static JPanel panel;
    private static BufferedImage[][] cardSprites;
-   private static BufferedImage back;
-   private Player play;
+   private static BufferedImage back, side;
+   private ArrayList<Player> play;
    private Card top;
-   public CrazyEightGUI(Card discard, Player player)
+   public CrazyEightGUI(Card discard, ArrayList<Player> player)
    {
       super("Crazy 8");
+      System.out.println("Num in the list: "+player.size());
       panel = new JPanel();
       top = discard;
       play = player;
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      setSize(1000,700);
+      setSize(1000,900);
       setResizable(false);
       add(panel);
       setBackground(Color.GREEN);
@@ -89,64 +90,16 @@ public class CrazyEightGUI extends JFrame
             loading = false;
          }
       }
-      BufferedImage bim = null;
-      BufferedImage dis = null;
-      int disVal = discard.value;
-      String disSuit = discard.suit.substring(0,1).toLowerCase();
-      String graphix = disSuit;
-      if(disVal < 10)
-      {
-         graphix += "0"+disVal;
-      }
-      else
-      {
-         graphix += disVal;
-      }
       try
       {
-         bim = ImageIO.read(new File("./Cards/Card-Back.png"));
-         back = bim;
-         dis = ImageIO.read(new File("./Cards/"+graphix+".png"));
+         back = ImageIO.read(new File("./Cards/Card-Back.png"));
+         side = ImageIO.read(new File("./Cards/Card-BackSide.png"));
       }
       catch(IOException e)
       {
          System.out.println("Card back could not be loaded.");
       }
-      int height = 180;
-      g.drawImage(bim,360,170,(int)(height*.7225),height,null);
-      g.drawImage(dis,510,170,(int)(height*.7225),height,null);
-      ArrayList<Card> playerHand = new ArrayList<Card>(player.hand);
-      int num = playerHand.size();
-      int xpos = 500;
-      int h = 250;
-      int w = (int)(h * .7225);
-      int ypos = 420;
-      int cardDist = w;
-      if(1000 < (num*(w-4)) && num > 1)
-      {
-         xpos = 0;
-         cardDist = ((1000-w)/(num-1));
-      }
-      else
-      {
-         xpos -= (w/2)*num;
-      }
-      int xtra = 1000 - (cardDist*(num-1)+w);
-      for(Card c: playerHand)
-      {
-         String st = c.suit.substring(0,1).toLowerCase();
-         BufferedImage bfim = cardSprites[suitToInt(st)][c.value];
-         g.drawImage(bfim,xpos,ypos,w,h,null);
-         if(xtra > 0)
-         {
-            xpos += cardDist + 1;
-            xtra--;
-         }
-         else
-         {
-            xpos += cardDist;
-         }
-      }
+      update(player,top);
    }
    /**
     * Called from the driver to update the GUI
@@ -156,23 +109,27 @@ public class CrazyEightGUI extends JFrame
    public void update(ArrayList<Player> players, Card topCard)
    {
       top = topCard;
-      play = players.get(0);
+      play = players;
       paint(this.getContentPane().getGraphics());
+   }
+   public void update(Graphics g)
+   {
+      paint(g);
    }
    /**
     * Draws the cards onto the JFrame.
     * @param p the Player controled by the User
     */
-   public void drawCards(Player p)
+   public void drawCards(ArrayList<Player> p)
    {
       play = p;
       Graphics g = panel.getGraphics();
-      ArrayList<Card> playerHand = p.hand;
+      ArrayList<Card> playerHand = p.get(0).hand;
       int num = playerHand.size();
       int xpos = 500;
       int h = 250;
       int w = (int)(h * .7225);
-      int ypos = 420;
+      int ypos = 620;
       int cardDist = w;
       if(1000 < (num*(w-4)) && num > 1)
       {
@@ -204,6 +161,140 @@ public class CrazyEightGUI extends JFrame
             xpos += cardDist;
          }
       }
+      if(play.size()==2)
+      {
+         fillMid(1);
+      }
+      else if(play.size() == 3)
+      {
+         fillLeft(1);
+         fillMid(2);
+      }
+      else
+      {
+         fillLeft(1);
+         fillMid(2);
+         fillRight(3);
+      }
+   }
+   //g.fillRect(0,200,120,400);
+   public void fillLeft(int index)
+   {
+      Graphics g = panel.getGraphics();
+      ArrayList<Card> playerHand = play.get(index).hand;
+      int num = playerHand.size();
+      int xpos = 0;
+      int h = 120;
+      int w = (int)(h * (1/.7225));
+      int ypos = 400;
+      int cardDist = h;
+      if(400 < (num*(h-4)) && num > 1)
+      {
+         ypos = 200;
+         int extraPix = 400-((cardDist*(num-1))+h);
+         if(extraPix > 0)
+         {
+            ypos += (int)(extraPix/2);
+         }
+         cardDist = ((400-h)/(num-1));
+      }
+      else
+      {
+         ypos -= (h/2)*num;
+      }
+      int xtra = 400 - (cardDist*(num-1)+h);
+      for(Card c: playerHand)
+      {
+         g.drawImage(side,xpos,ypos,w,h,null);
+         if(xtra > 0)
+         {
+            ypos += cardDist + 1;
+            xtra--;
+         }
+         else
+         {
+            ypos += cardDist;
+         }
+      }
+   }
+   //g.fillRect(880,200,120,400);
+   public void fillRight(int index)
+   {
+      Graphics g = panel.getGraphics();
+      ArrayList<Card> playerHand = play.get(index).hand;
+      int num = playerHand.size();
+      int h = 120;
+      int w = (int)(h * (1/.7225));
+      int xpos = 1000 - w;
+      int ypos = 400;
+      int cardDist = h;
+      if(400 < (num*(h-4)) && num > 1)
+      {
+         ypos = 200;
+         int extraPix = 400-((cardDist*(num-1))+h);
+         if(extraPix > 0)
+         {
+            ypos += (int)(extraPix/2);
+         }
+         cardDist = ((400-h)/(num-1));
+      }
+      else
+      {
+         ypos -= (h/2)*num;
+      }
+      int xtra = 400 - (cardDist*(num-1)+h);
+      for(Card c: playerHand)
+      {
+         g.drawImage(side,xpos,ypos,w,h,null);
+         if(xtra > 0)
+         {
+            ypos += cardDist + 1;
+            xtra--;
+         }
+         else
+         {
+            ypos += cardDist;
+         }
+      }
+   }
+   public void fillMid(int index)
+   {
+      Graphics g = panel.getGraphics();
+      ArrayList<Card> playerHand = play.get(index).hand;
+      int num = playerHand.size();
+      int xpos = 500;
+      int h = 140;
+      int w = (int)(h * .7225);
+      int ypos = 0;
+      int cardDist = w;
+      if(400 < (num*(w-4)) && num > 1)
+      {
+         xpos = 300;
+         int extraPix = 400-((cardDist*(num-1))+w);
+         if(extraPix > 0)
+         {
+            xpos += (int)(extraPix/2);
+         }
+         cardDist = ((400-w)/(num-1));
+      }
+      else
+      {
+         xpos -= (w/2)*num;
+      }
+      int xtra = 400 - (cardDist*(num-1)+w);
+      for(Card c: playerHand)
+      {
+         g.drawImage(back,xpos,ypos,w,h,null);
+         if(xtra > 0)
+         {
+            xpos += cardDist + 1;
+            xtra--;
+         }
+         else
+         {
+            xpos += cardDist;
+         }
+      }
    }
    /**
     * Updates the piles on the GUI
@@ -217,8 +308,8 @@ public class CrazyEightGUI extends JFrame
       String disSuit = c.suit.substring(0,1).toLowerCase();
       BufferedImage dis = cardSprites[suitToInt(disSuit)][c.value];
       int height = 180;
-      g.drawImage(bim,360,170,(int)(height*.7225),height,null);
-      g.drawImage(dis,510,170,(int)(height*.7225),height,null);
+      g.drawImage(bim,360,270,(int)(height*.7225),height,null);
+      g.drawImage(dis,510,270,(int)(height*.7225),height,null);
    }
    public int suitToInt(String s)
    {
@@ -233,6 +324,7 @@ public class CrazyEightGUI extends JFrame
    public void paint(Graphics g)
    {
       super.paint(g);
+      panel.repaint();
       drawCards(play);
       drawPiles(top);
    }
